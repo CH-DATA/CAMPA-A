@@ -553,7 +553,7 @@
       </div>
     </div>
 
-    <div class="footer-note">Datos guardados solo en esta pestaña del navegador (se pierden al cerrar). Para producción, conviene un backend compartido.</div>
+    <div class="footer-note" id="footer-note-humano">Datos guardados solo en esta pestaña del navegador (se pierden al cerrar). Para producción, conviene un backend compartido.</div>
   </div>
 </div>
 
@@ -698,7 +698,7 @@
       </div>
     </div>
 
-    <div class="footer-note">Datos guardados solo en esta pestaña del navegador (se pierden al cerrar). Para producción, conviene un backend compartido.</div>
+    <div class="footer-note" id="footer-note-vet">Datos guardados solo en esta pestaña del navegador (se pierden al cerrar). Para producción, conviene un backend compartido.</div>
   </div>
 </div>
 
@@ -706,8 +706,49 @@
 
 </div><!-- /app-veterinaria -->
 
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
+/* =========================================================
+   🔥 CONFIGURACIÓN DE FIREBASE — PEGA AQUÍ TUS DATOS
+   Consola de Firebase → ⚙️ Configuración del proyecto →
+   "Tus apps" → Configuración del SDK → Config
+========================================================= */
+const firebaseConfig = {
+  apiKey: "AIzaSyCi1FBmydsL9ItbMtSdM1bgDJbdT_WsZbY",
+  authDomain: "campana-4d59e.firebaseapp.com",
+  projectId: "campana-4d59e",
+  storageBucket: "campana-4d59e.firebasestorage.app",
+  messagingSenderId: "504370545099",
+  appId: "1:504370545099:web:6404e8ca86096e98d8364e"
+};
+
+let USE_FIREBASE = false;
+let db, colHumano, colVet;
+try {
+  if (typeof firebase !== "undefined" && firebaseConfig.apiKey && !firebaseConfig.apiKey.includes("PEGA_AQUI")) {
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+    colHumano = db.collection("campana_salud_pacientes");
+    colVet = db.collection("campana_salud_veterinaria");
+    USE_FIREBASE = true;
+  }
+} catch (e) {
+  console.error("No se pudo conectar a Firebase:", e);
+  USE_FIREBASE = false;
+}
+
+function marcarEstadoConexion() {
+  const msg = USE_FIREBASE
+    ? "☁️ Datos guardados en Firebase (persisten al recargar)."
+    : "⚠️ Firebase no está configurado: los datos se perderán al recargar. Revisa firebaseConfig en el código.";
+  const f1 = document.getElementById("footer-note-humano");
+  const f2 = document.getElementById("footer-note-vet");
+  if (f1) f1.textContent = msg;
+  if (f2) f2.textContent = msg;
+}
+
 const SERVICES = [
   { key: "optometria", label: "Optometría", ico: "👁️", color: "#2C3E50" },
   { key: "podologia", label: "Podología", ico: "🦶", color: "#34524A" },
@@ -839,11 +880,13 @@ document.getElementById("form-triaje").addEventListener("submit", function(e) {
 
   const imc = calcIMC(peso, talla);
   const existing = patients[dni] || { services: emptyServices() };
-  patients[dni] = {
+  const nuevo = {
     ...existing, dni, apellido, edad, telefono, peso, talla,
     imc: imc ? imc.valor : "", imcCategoria: imc ? imc.categoria : "",
     presion, triajeOk: true, triajeAt: now(), services: existing.services || emptyServices(),
   };
+  patients[dni] = nuevo;
+  if (USE_FIREBASE) colHumano.doc(dni).set(nuevo).catch(err => showToast("Error al guardar en Firebase: " + err.message, "error"));
 
   setMsg(msgEl, "ok", `Registrado: ${apellido} (DNI ${dni}). IMC ${imc ? imc.valor + " · " + imc.categoria : "-"}. Ahora debe pasar por SISFOH.`);
   document.getElementById("form-triaje").reset();
@@ -867,6 +910,7 @@ document.getElementById("form-sisfoh").addEventListener("submit", function(e) {
   p.sisfohOk = true;
   p.sisfohEstado = sisfohEstado;
   p.sisfohAt = now();
+  if (USE_FIREBASE) colHumano.doc(dni).set(p).catch(err => showToast("Error al guardar en Firebase: " + err.message, "error"));
 
   setMsg(msgEl, "ok", `Validado: ${p.apellido} (DNI ${dni}). Ya puede pasar a las carpetas de servicio.`);
   document.getElementById("form-sisfoh").reset();
@@ -971,6 +1015,7 @@ function marcarAtendido() {
   if (!svcResult || svcResult.kind !== "found" || !currentService) return;
   const p = patients[svcResult.p.dni];
   p.services[currentService] = { done: true, at: now() };
+  if (USE_FIREBASE) colHumano.doc(p.dni).set(p).catch(err => showToast("Error al guardar en Firebase: " + err.message, "error"));
   svcResult = { kind: "found", p };
   renderSvcPanel();
   renderServiciosGrid();
@@ -1001,9 +1046,17 @@ function renderResumen() {
   html += "</tbody>";
   table.innerHTML = html;
 }
-function vaciarTodo() {
+async function vaciarTodo() {
   if (!confirm("¿Borrar todos los registros? Esta acción no se puede deshacer.")) return;
   patients = {};
+  if (USE_FIREBASE) {
+    try {
+      const snap = await colHumano.get();
+      const batch = db.batch();
+      snap.forEach(d => batch.delete(d.ref));
+      await batch.commit();
+    } catch (err) { showToast("Error al borrar en Firebase: " + err.message, "error"); }
+  }
   renderAll();
   showToast("Se borraron todos los registros.");
 }
@@ -1364,11 +1417,13 @@ document.getElementById("form-vregistro").addEventListener("submit", function(e)
   if (!especie) return setMsg(msgEl, "error", "Ingresa la especie de la mascota.");
 
   const existing = vetPatients[dni] || { atenciones: emptyTreatments() };
-  vetPatients[dni] = {
+  const nuevo = {
     ...existing, dni, nombre, celular, direccion,
     mnombre, especie, raza, sexo, medad, mpeso, obs,
     triajeOk: true, triajeAt: now(), atenciones: existing.atenciones || emptyTreatments(),
   };
+  vetPatients[dni] = nuevo;
+  if (USE_FIREBASE) colVet.doc(dni).set(nuevo).catch(err => showToastVet("Error al guardar en Firebase: " + err.message, "error"));
 
   setMsg(msgEl, "ok", `Registrado: ${nombre} (DNI ${dni}) · Mascota: ${mnombre}. Ahora debe pasar por SISFOH.`);
   document.getElementById("form-vregistro").reset();
@@ -1391,6 +1446,7 @@ document.getElementById("form-vsisfoh").addEventListener("submit", function(e) {
   p.sisfohOk = true;
   p.sisfohEstado = vsisfohEstado;
   p.sisfohAt = now();
+  if (USE_FIREBASE) colVet.doc(dni).set(p).catch(err => showToastVet("Error al guardar en Firebase: " + err.message, "error"));
 
   setMsg(msgEl, "ok", `Validado: ${p.nombre} (DNI ${dni}). Ya puede pasar a Atención Veterinaria.`);
   document.getElementById("form-vsisfoh").reset();
@@ -1448,6 +1504,7 @@ function toggleTratamiento(dni, key, checked) {
   const p = vetPatients[dni];
   if (!p) return;
   p.atenciones[key] = { done: checked, at: checked ? now() : null };
+  if (USE_FIREBASE) colVet.doc(dni).set(p).catch(err => showToastVet("Error al guardar en Firebase: " + err.message, "error"));
   renderVetAtencionPanel();
   renderStatsVet();
   showToastVet(checked ? "Tratamiento registrado ✓" : "Tratamiento desmarcado");
@@ -1477,9 +1534,17 @@ function renderResumenVet() {
   html += "</tbody>";
   table.innerHTML = html;
 }
-function vaciarTodoVet() {
+async function vaciarTodoVet() {
   if (!confirm("¿Borrar todos los registros veterinarios? Esta acción no se puede deshacer.")) return;
   vetPatients = {};
+  if (USE_FIREBASE) {
+    try {
+      const snap = await colVet.get();
+      const batch = db.batch();
+      snap.forEach(d => batch.delete(d.ref));
+      await batch.commit();
+    } catch (err) { showToastVet("Error al borrar en Firebase: " + err.message, "error"); }
+  }
   renderAllVet();
   showToastVet("Se borraron todos los registros.");
 }
@@ -1631,6 +1696,22 @@ function renderAllVet() {
   renderSorteoVet();
 }
 
+// ---------- FIRESTORE REALTIME SYNC ----------
+function iniciarSincronizacion() {
+  if (!USE_FIREBASE) return;
+  colHumano.onSnapshot(snap => {
+    patients = {};
+    snap.forEach(d => patients[d.id] = d.data());
+    renderAll();
+  }, err => showToast("Error de sincronización: " + err.message, "error"));
+
+  colVet.onSnapshot(snap => {
+    vetPatients = {};
+    snap.forEach(d => vetPatients[d.id] = d.data());
+    renderAllVet();
+  }, err => showToastVet("Error de sincronización: " + err.message, "error"));
+}
+
 // ---------- INIT ----------
 buildSidebar();
 switchTab("inicio");
@@ -1638,6 +1719,8 @@ renderAll();
 buildSidebarVet();
 switchVTab("inicio");
 renderAllVet();
+marcarEstadoConexion();
+iniciarSincronizacion();
 goLanding();
 </script>
 </body>
