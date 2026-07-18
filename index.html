@@ -245,6 +245,50 @@
   .foto-btn:hover { background: #F4F1E8; }
   .foto-remove { font-size: 11px; color: #B5842B; text-decoration: underline; cursor: pointer; background: none; border: none; padding: 0; text-align: center; }
 
+  /* ---------- BLOQUES DE MASCOTA (registro múltiple) ---------- */
+  #mascotas-container { display: flex; flex-direction: column; gap: 14px; margin-top: 4px; }
+  .mascota-block {
+    position: relative; border: 1.5px solid #E4DFD3; border-radius: 18px; padding: 14px 14px 16px;
+    background: linear-gradient(180deg, #FDFCF9 0%, #FAF8F2 100%);
+    display: flex; flex-direction: column; gap: 10px;
+    animation: mascotaIn .28s ease;
+  }
+  @keyframes mascotaIn { from { opacity: 0; transform: translateY(-6px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  .mascota-block::before {
+    content: ""; position: absolute; left: 0; top: 14px; bottom: 14px; width: 4px; border-radius: 4px;
+    background: linear-gradient(180deg, #1F7A52, #C9E265);
+  }
+  .mascota-block-head { display: flex; align-items: center; justify-content: space-between; }
+  .mascota-block-num {
+    font-size: 12px; font-weight: 800; color: #0E4A36; background: #EAF7EF;
+    padding: 5px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 4px;
+  }
+  .mascota-remove {
+    background: none; border: none; color: #B23B3B; font-size: 11px; font-weight: 700; cursor: pointer;
+    padding: 4px 8px; border-radius: 8px; display: inline-flex; align-items: center; gap: 3px; transition: background .15s ease;
+  }
+  .mascota-remove:hover { background: #FBEAEA; }
+  .btn-add-mascota {
+    width: 100%; margin-top: 4px; padding: 13px; border: 1.5px dashed #1F7A52; border-radius: 16px;
+    background: #F3FBF6; color: #0E4A36; font-weight: 800; font-size: 13.5px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px; transition: all .18s ease;
+    font-family: 'Inter', sans-serif;
+  }
+  .btn-add-mascota:hover { background: #E4F5EA; border-style: solid; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(31,122,82,0.18); }
+  .btn-add-mascota .plus-circle {
+    width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(120deg, #0E4A36, #1F7A52);
+    color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; flex-shrink: 0;
+  }
+
+  /* ---------- SELECTOR DE MASCOTA (atención) ---------- */
+  .mascota-picker { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+  .mascota-pick-btn {
+    text-align: left; border: 1.5px solid #E4DFD3; background: #fff; border-radius: 14px; padding: 12px 14px;
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700; color: #2E2B22; cursor: pointer; transition: all .15s ease;
+  }
+  .mascota-pick-btn span { font-weight: 500; color: #8A8478; }
+  .mascota-pick-btn:hover { border-color: #1F7A52; background: #F3FBF6; }
+
   /* ---------- LINK EN TABLA (nombre mascota) ---------- */
   .link-btn {
     background: none; border: none; padding: 0; cursor: pointer; font-family: 'Inter', sans-serif;
@@ -268,6 +312,12 @@
   }
   .dl-btn:hover { border-color: #1F7A52; background: #EAF7EF; }
   .dl-btn:disabled { opacity: 0.6; cursor: default; }
+  .del-btn {
+    width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid #E9C6C6; cursor: pointer;
+    background: #fff; color: #B23B3B; font-size: 13px;
+    display: inline-flex; align-items: center; justify-content: center; transition: all .18s ease;
+  }
+  .del-btn:hover { border-color: #B23B3B; background: #FBEAEA; transform: scale(1.05); }
 
   /* ---------- FICHA MODAL (CARNET) ---------- */
   .ficha-overlay {
@@ -786,29 +836,8 @@
           <div class="field-wrap"><span class="field-ico">📞</span><input class="input" id="v-celular" placeholder="Celular" maxlength="9" inputmode="numeric"></div>
 
           <div style="font-size:12.5px;font-weight:800;color:#8A8478;margin-top:10px;">DATOS DE LA MASCOTA</div>
-          <div class="field-wrap"><span class="field-ico">🐾</span><input class="input" id="v-mnombre" placeholder="Nombre del perrito/mascota"></div>
-          <div class="row-gap">
-            <div class="field-wrap"><span class="field-ico">🐕</span><input class="input" id="v-especie" placeholder="Especie (ej. Canino, Felino)"></div>
-            <div class="field-wrap"><span class="field-ico">🎗️</span><input class="input" id="v-raza" placeholder="Raza"></div>
-          </div>
-          <div style="font-size:11px;font-weight:700;color:#8A8478;margin-top:2px;">Sexo</div>
-          <div class="row-gap">
-            <div class="pill-opt" data-vsexo="Macho" onclick="selectSexoVet('Macho')">♂ Macho</div>
-            <div class="pill-opt" data-vsexo="Hembra" onclick="selectSexoVet('Hembra')">♀ Hembra</div>
-          </div>
-          <div class="field-wrap"><span class="field-ico">📅</span><input class="input" id="v-medad" placeholder="Edad" maxlength="4"></div>
-          <div class="field-wrap"><span class="field-ico">⚖️</span><input class="input" id="v-mpeso" placeholder="Peso (kg)" maxlength="6" inputmode="decimal"></div>
-          <div class="field-wrap"><span class="field-ico">📝</span><input class="input" id="v-obs" placeholder="Observaciones"></div>
-
-          <div style="font-size:11px;font-weight:700;color:#8A8478;margin-top:2px;">Foto de la mascota</div>
-          <div class="foto-field">
-            <div class="foto-preview" id="v-foto-preview">🐾</div>
-            <div class="foto-btn-col">
-              <label class="foto-btn" for="v-foto-input">📷 Tomar / subir foto</label>
-              <input type="file" id="v-foto-input" accept="image/*" capture="environment" style="display:none;" onchange="handleFotoVetChange(event)">
-              <button type="button" class="foto-remove" id="v-foto-remove" style="display:none;" onclick="clearFotoVet()">Quitar foto</button>
-            </div>
-          </div>
+          <div id="mascotas-container"></div>
+          <button type="button" class="btn-add-mascota" onclick="agregarMascotaBlock()"><span class="plus-circle">+</span> Agregar otra mascota</button>
 
           <button class="btn-primary" type="submit">💾 Guardar</button>
         </form>
@@ -1663,11 +1692,92 @@ let vetPatients = {};
 let currentVTab = "inicio";
 let vsisfohEstado = "si";
 let vatnResult = null;
-let vSexoSeleccionado = "";
-function selectSexoVet(val) {
-  vSexoSeleccionado = val;
-  document.querySelectorAll('[data-vsexo]').forEach(el => el.classList.toggle("selected", el.dataset.vsexo === val));
+
+// ---------- BLOQUES DE MASCOTA (registro múltiple) ----------
+let vMascotaBlockSeq = 0;
+let vSexoPorBloque = {};
+let vFotosPorBloque = {};
+
+function crearBloqueMascotaHtml(n) {
+  return `
+    <div class="mascota-block" data-mid="${n}">
+      <div class="mascota-block-head">
+        <span class="mascota-block-num">🐾 Mascota <span class="mascota-block-idx"></span></span>
+        <button type="button" class="mascota-remove" onclick="quitarMascotaBlock(${n})">✕ Quitar</button>
+      </div>
+      <div class="field-wrap"><span class="field-ico">🐾</span><input class="input" id="v-mnombre-${n}" placeholder="Nombre del perrito/mascota"></div>
+      <div class="row-gap">
+        <div class="field-wrap"><span class="field-ico">🐕</span><input class="input" id="v-especie-${n}" placeholder="Especie (ej. Canino, Felino)"></div>
+        <div class="field-wrap"><span class="field-ico">🎗️</span><input class="input" id="v-raza-${n}" placeholder="Raza"></div>
+      </div>
+      <div style="font-size:11px;font-weight:700;color:#8A8478;margin-top:2px;">Sexo</div>
+      <div class="row-gap">
+        <div class="pill-opt" data-vsexo-block="${n}" data-vsexo="Macho" onclick="selectSexoVetBlock(${n},'Macho')">♂ Macho</div>
+        <div class="pill-opt" data-vsexo-block="${n}" data-vsexo="Hembra" onclick="selectSexoVetBlock(${n},'Hembra')">♀ Hembra</div>
+      </div>
+      <div class="field-wrap"><span class="field-ico">📅</span><input class="input" id="v-medad-${n}" placeholder="Edad" maxlength="4"></div>
+      <div class="field-wrap"><span class="field-ico">⚖️</span><input class="input" id="v-mpeso-${n}" placeholder="Peso (kg)" maxlength="6" inputmode="decimal"></div>
+      <div class="field-wrap"><span class="field-ico">📝</span><input class="input" id="v-obs-${n}" placeholder="Observaciones"></div>
+      <div style="font-size:11px;font-weight:700;color:#8A8478;margin-top:2px;">Foto de la mascota</div>
+      <div class="foto-field">
+        <div class="foto-preview" id="v-foto-preview-${n}">🐾</div>
+        <div class="foto-btn-col">
+          <label class="foto-btn" for="v-foto-input-${n}">📷 Tomar / subir foto</label>
+          <input type="file" id="v-foto-input-${n}" accept="image/*" capture="environment" style="display:none;" onchange="handleFotoVetChange(event, ${n})">
+          <button type="button" class="foto-remove" id="v-foto-remove-${n}" style="display:none;" onclick="clearFotoVet(${n})">Quitar foto</button>
+        </div>
+      </div>
+    </div>`;
 }
+
+function renumerarBloques() {
+  const blocks = document.querySelectorAll("#mascotas-container .mascota-block");
+  blocks.forEach((b, i) => {
+    const idxEl = b.querySelector(".mascota-block-idx");
+    if (idxEl) idxEl.textContent = i + 1;
+    const btn = b.querySelector(".mascota-remove");
+    if (btn) btn.style.display = blocks.length > 1 ? "inline-flex" : "none";
+  });
+}
+
+function agregarMascotaBlock() {
+  vMascotaBlockSeq++;
+  const n = vMascotaBlockSeq;
+  vSexoPorBloque[n] = "";
+  vFotosPorBloque[n] = "";
+  document.getElementById("mascotas-container").insertAdjacentHTML("beforeend", crearBloqueMascotaHtml(n));
+  renumerarBloques();
+  const el = document.getElementById("v-mnombre-" + n);
+  if (el) { el.scrollIntoView({ behavior: "smooth", block: "center" }); el.focus(); }
+  showToastVet("Mascota agregada ✓");
+}
+
+function quitarMascotaBlock(n) {
+  const blocks = document.querySelectorAll("#mascotas-container .mascota-block");
+  if (blocks.length <= 1) return;
+  const block = document.querySelector('#mascotas-container .mascota-block[data-mid="' + n + '"]');
+  if (block) block.remove();
+  delete vSexoPorBloque[n];
+  delete vFotosPorBloque[n];
+  renumerarBloques();
+}
+
+function selectSexoVetBlock(n, val) {
+  vSexoPorBloque[n] = val;
+  document.querySelectorAll('.pill-opt[data-vsexo-block="' + n + '"]').forEach(el => el.classList.toggle("selected", el.dataset.vsexo === val));
+}
+
+function resetMascotasContainer() {
+  document.getElementById("mascotas-container").innerHTML = "";
+  vSexoPorBloque = {};
+  vFotosPorBloque = {};
+  vMascotaBlockSeq = 1;
+  vSexoPorBloque[1] = "";
+  vFotosPorBloque[1] = "";
+  document.getElementById("mascotas-container").insertAdjacentHTML("beforeend", crearBloqueMascotaHtml(1));
+  renumerarBloques();
+}
+resetMascotasContainer();
 
 function emptyTreatments() {
   const o = {};
@@ -1732,8 +1842,7 @@ function renderStatsVet() {
 }
 
 // ---------- REGISTRO (VET) ----------
-let vFotoDataURL = "";
-function handleFotoVetChange(e) {
+function handleFotoVetChange(e, n) {
   const file = e.target.files && e.target.files[0];
   if (!file) return;
   if (!file.type.startsWith("image/")) {
@@ -1756,26 +1865,28 @@ function handleFotoVetChange(e) {
       canvas.width = w; canvas.height = h;
       const ctx = canvas.getContext("2d");
       ctx.drawImage(img, 0, 0, w, h);
+      let dataUrl;
       try {
-        vFotoDataURL = canvas.toDataURL("image/jpeg", 0.72);
+        dataUrl = canvas.toDataURL("image/jpeg", 0.72);
       } catch (err) {
         showToastVet("No se pudo comprimir la foto: " + err.message, "error");
         return;
       }
-      const prev = document.getElementById("v-foto-preview");
-      prev.innerHTML = `<img src="${vFotoDataURL}" alt="Foto mascota">`;
-      document.getElementById("v-foto-remove").style.display = "block";
+      vFotosPorBloque[n] = dataUrl;
+      const prev = document.getElementById("v-foto-preview-" + n);
+      prev.innerHTML = `<img src="${dataUrl}" alt="Foto mascota">`;
+      document.getElementById("v-foto-remove-" + n).style.display = "block";
       showToastVet("Foto lista ✓");
     };
     img.src = reader.result;
   };
   reader.readAsDataURL(file);
 }
-function clearFotoVet() {
-  vFotoDataURL = "";
-  document.getElementById("v-foto-input").value = "";
-  document.getElementById("v-foto-preview").innerHTML = "🐾";
-  document.getElementById("v-foto-remove").style.display = "none";
+function clearFotoVet(n) {
+  vFotosPorBloque[n] = "";
+  document.getElementById("v-foto-input-" + n).value = "";
+  document.getElementById("v-foto-preview-" + n).innerHTML = "🐾";
+  document.getElementById("v-foto-remove-" + n).style.display = "none";
 }
 
 document.getElementById("form-vregistro").addEventListener("submit", function(e) {
@@ -1783,37 +1894,56 @@ document.getElementById("form-vregistro").addEventListener("submit", function(e)
   const dni = document.getElementById("v-dni").value.trim();
   const nombre = document.getElementById("v-nombre").value.trim();
   const celular = document.getElementById("v-celular").value.trim();
-  const mnombre = document.getElementById("v-mnombre").value.trim();
-  const especie = document.getElementById("v-especie").value.trim();
-  const raza = document.getElementById("v-raza").value.trim();
-  const sexo = vSexoSeleccionado;
-  const medad = document.getElementById("v-medad").value.trim();
-  const mpeso = document.getElementById("v-mpeso").value.trim();
-  const obs = document.getElementById("v-obs").value.trim();
   const msgEl = document.getElementById("v-msg");
 
   if (!/^\d{8}$/.test(dni)) return setMsg(msgEl, "error", "El DNI del dueño debe tener 8 dígitos.");
   if (!nombre) return setMsg(msgEl, "error", "Ingresa nombres y apellidos del dueño.");
   if (!celular) return setMsg(msgEl, "error", "Ingresa un celular.");
-  if (!mnombre) return setMsg(msgEl, "error", "Ingresa el nombre de la mascota.");
-  if (!especie) return setMsg(msgEl, "error", "Ingresa la especie de la mascota.");
-  if (!sexo) return setMsg(msgEl, "error", "Selecciona el sexo de la mascota (Macho o Hembra).");
 
-  const existing = vetPatients[dni] || { atenciones: emptyTreatments() };
-  const nuevo = {
-    ...existing, dni, nombre, celular,
-    mnombre, especie, raza, sexo, medad, mpeso, obs,
-    foto: vFotoDataURL || existing.foto || "",
-    triajeOk: true, triajeAt: now(), triajeAtISO: existing.triajeAtISO || new Date().toISOString(), atenciones: existing.atenciones || emptyTreatments(),
-  };
-  vetPatients[dni] = nuevo;
-  if (USE_FIREBASE) colVet.doc(dni).set(nuevo).catch(err => showToastVet("Error al guardar en Firebase: " + err.message, "error"));
+  const blocks = Array.from(document.querySelectorAll("#mascotas-container .mascota-block"));
+  const mascotas = [];
+  for (let i = 0; i < blocks.length; i++) {
+    const n = blocks[i].dataset.mid;
+    const numVisible = i + 1;
+    const mnombre = document.getElementById("v-mnombre-" + n).value.trim();
+    const especie = document.getElementById("v-especie-" + n).value.trim();
+    const raza = document.getElementById("v-raza-" + n).value.trim();
+    const sexo = vSexoPorBloque[n] || "";
+    const medad = document.getElementById("v-medad-" + n).value.trim();
+    const mpeso = document.getElementById("v-mpeso-" + n).value.trim();
+    const obs = document.getElementById("v-obs-" + n).value.trim();
+    const foto = vFotosPorBloque[n] || "";
 
-  setMsg(msgEl, "ok", `Guardado: ${nombre} (DNI ${dni}) · Mascota: ${mnombre}. Ahora debe pasar por SISFOH.`);
+    if (!mnombre) return setMsg(msgEl, "error", `Ingresa el nombre de la mascota ${numVisible}.`);
+    if (!especie) return setMsg(msgEl, "error", `Ingresa la especie de la mascota ${numVisible} (${mnombre}).`);
+    if (!sexo) return setMsg(msgEl, "error", `Selecciona el sexo de la mascota ${numVisible} (${mnombre}).`);
+
+    mascotas.push({ mnombre, especie, raza, sexo, medad, mpeso, obs, foto });
+  }
+
+  mascotas.forEach(m => {
+    const nombreNorm = m.mnombre.toLowerCase();
+    let key = Object.keys(vetPatients).find(k => vetPatients[k].dni === dni && (vetPatients[k].mnombre || "").trim().toLowerCase() === nombreNorm);
+    if (!key) {
+      let idx = 1;
+      while (vetPatients[`${dni}_${idx}`]) idx++;
+      key = `${dni}_${idx}`;
+    }
+    const existing = vetPatients[key] || { atenciones: emptyTreatments() };
+    const nuevo = {
+      ...existing, dni, nombre, celular,
+      mnombre: m.mnombre, especie: m.especie, raza: m.raza, sexo: m.sexo, medad: m.medad, mpeso: m.mpeso, obs: m.obs,
+      foto: m.foto || existing.foto || "",
+      triajeOk: true, triajeAt: now(), triajeAtISO: existing.triajeAtISO || new Date().toISOString(), atenciones: existing.atenciones || emptyTreatments(),
+    };
+    vetPatients[key] = nuevo;
+    if (USE_FIREBASE) colVet.doc(key).set(nuevo).catch(err => showToastVet("Error al guardar en Firebase: " + err.message, "error"));
+  });
+
+  const cant = mascotas.length;
+  setMsg(msgEl, "ok", `Guardado: ${nombre} (DNI ${dni}) · ${cant} mascota${cant > 1 ? "s" : ""} registrada${cant > 1 ? "s" : ""}. Ahora debe pasar por SISFOH.`);
   document.getElementById("form-vregistro").reset();
-  vSexoSeleccionado = "";
-  clearFotoVet();
-  document.querySelectorAll('[data-vsexo]').forEach(el => el.classList.remove("selected"));
+  resetMascotasContainer();
   renderAllVet();
   showToastVet("Registro guardado y formulario limpio ✓");
 });
@@ -1828,15 +1958,21 @@ document.getElementById("form-vsisfoh").addEventListener("submit", function(e) {
   const dni = document.getElementById("vs-dni").value.trim();
   const msgEl = document.getElementById("vs-msg");
   if (!/^\d{8}$/.test(dni)) return setMsg(msgEl, "error", "El DNI debe tener 8 dígitos.");
-  const p = vetPatients[dni];
-  if (!p || !p.triajeOk) return setMsg(msgEl, "error", "Este DNI no pasó por Registro todavía. Regístralo ahí primero.");
+  const claves = Object.keys(vetPatients).filter(k => vetPatients[k].dni === dni && vetPatients[k].triajeOk);
+  if (claves.length === 0) return setMsg(msgEl, "error", "Este DNI no pasó por Registro todavía. Regístralo ahí primero.");
 
-  p.sisfohOk = true;
-  p.sisfohEstado = vsisfohEstado;
-  p.sisfohAt = now();
-  if (USE_FIREBASE) colVet.doc(dni).set(p).catch(err => showToastVet("Error al guardar en Firebase: " + err.message, "error"));
+  let nombreDueno = "";
+  claves.forEach(k => {
+    const p = vetPatients[k];
+    p.sisfohOk = true;
+    p.sisfohEstado = vsisfohEstado;
+    p.sisfohAt = now();
+    nombreDueno = p.nombre;
+    if (USE_FIREBASE) colVet.doc(k).set(p).catch(err => showToastVet("Error al guardar en Firebase: " + err.message, "error"));
+  });
 
-  setMsg(msgEl, "ok", `Validado: ${p.nombre} (DNI ${dni}). Ya puede pasar a Atención Veterinaria.`);
+  const cant = claves.length;
+  setMsg(msgEl, "ok", `Validado: ${nombreDueno} (DNI ${dni}) · ${cant} mascota${cant > 1 ? "s" : ""}. Ya puede pasar a Atención Veterinaria.`);
   document.getElementById("form-vsisfoh").reset();
   renderAllVet();
 });
@@ -1846,23 +1982,80 @@ function lookupVetAtencion() {
   const dni = document.getElementById("vatn-dni").value.trim();
   const wrap = document.getElementById("vatn-result");
   if (!/^\d{8}$/.test(dni)) { vatnResult = null; wrap.innerHTML = `<div class="msg-box msg-error">Ingresa un DNI válido de 8 dígitos.</div>`; playDenySound(); return; }
-  const p = vetPatients[dni];
-  if (!p || !p.triajeOk || !p.sisfohOk) {
+
+  const claves = Object.keys(vetPatients).filter(k => vetPatients[k].dni === dni);
+  if (claves.length === 0) {
+    vatnResult = null;
     wrap.innerHTML = `
       <div class="block-box">
         <div class="block-header">
           <div class="icow">⛔</div>
-          <div class="txt">Este dueño no puede ser atendido: falta completar Registro y/o SISFOH.</div>
-        </div>
-        <div class="status-pills">
-          <div class="status-pill ${p?.triajeOk ? "pill-ok" : "pill-bad"}">📋 REGISTRO<br>${p?.triajeOk ? "✓ LISTO" : "✕ FALTA"}</div>
-          <div class="status-pill ${p?.sisfohOk ? "pill-ok" : "pill-bad"}">🛡️ SISFOH<br>${p?.sisfohOk ? "✓ LISTO" : "✕ FALTA"}</div>
+          <div class="txt">Este DNI no tiene registro. Regístralo en la pestaña Registro primero.</div>
         </div>
       </div>`;
     playDenySound();
     return;
   }
-  vatnResult = p.dni;
+
+  if (claves.length === 1) {
+    const p = vetPatients[claves[0]];
+    if (!p.triajeOk || !p.sisfohOk) {
+      vatnResult = null;
+      wrap.innerHTML = `
+        <div class="block-box">
+          <div class="block-header">
+            <div class="icow">⛔</div>
+            <div class="txt">Este dueño no puede ser atendido: falta completar Registro y/o SISFOH.</div>
+          </div>
+          <div class="status-pills">
+            <div class="status-pill ${p?.triajeOk ? "pill-ok" : "pill-bad"}">📋 REGISTRO<br>${p?.triajeOk ? "✓ LISTO" : "✕ FALTA"}</div>
+            <div class="status-pill ${p?.sisfohOk ? "pill-ok" : "pill-bad"}">🛡️ SISFOH<br>${p?.sisfohOk ? "✓ LISTO" : "✕ FALTA"}</div>
+          </div>
+        </div>`;
+      playDenySound();
+      return;
+    }
+    vatnResult = claves[0];
+    renderVetAtencionPanel();
+    return;
+  }
+
+  // Dueño con varias mascotas registradas
+  const elegibles = claves.filter(k => vetPatients[k].triajeOk && vetPatients[k].sisfohOk);
+  if (elegibles.length === 0) {
+    vatnResult = null;
+    wrap.innerHTML = `
+      <div class="block-box">
+        <div class="block-header">
+          <div class="icow">⛔</div>
+          <div class="txt">Ninguna mascota de este dueño puede ser atendida todavía: falta completar Registro y/o SISFOH.</div>
+        </div>
+      </div>`;
+    playDenySound();
+    return;
+  }
+  if (elegibles.length === 1) {
+    vatnResult = elegibles[0];
+    renderVetAtencionPanel();
+    return;
+  }
+
+  vatnResult = null;
+  const dueno = vetPatients[elegibles[0]];
+  wrap.innerHTML = `
+    <div class="found-box">
+      <div class="found-name">${dueno.nombre} <span style="color:#8A8478;font-weight:600;">· DNI ${dueno.dni}</span></div>
+      <div class="found-meta">Este dueño tiene ${elegibles.length} mascotas listas para atención. Elige una:</div>
+      <div class="mascota-picker">
+        ${elegibles.map(k => {
+          const p = vetPatients[k];
+          return `<button type="button" class="mascota-pick-btn" onclick="elegirMascotaAtencion('${k}')">🐾 ${p.mnombre} <span>· ${p.especie}${p.raza ? " · " + p.raza : ""}</span></button>`;
+        }).join("")}
+      </div>
+    </div>`;
+}
+function elegirMascotaAtencion(key) {
+  vatnResult = key;
   renderVetAtencionPanel();
 }
 function renderVetAtencionPanel() {
@@ -1881,7 +2074,7 @@ function renderVetAtencionPanel() {
           const done = p.atenciones?.[t.key]?.done;
           return `
           <label class="treat-item${done ? " checked" : ""}">
-            <input type="checkbox" ${done ? "checked" : ""} onchange="toggleTratamiento('${p.dni}','${t.key}', this.checked)">
+            <input type="checkbox" ${done ? "checked" : ""} onchange="toggleTratamiento('${vatnResult}','${t.key}', this.checked)">
             ${t.ico} ${t.label}${done && p.atenciones[t.key].at ? ` <span style="font-size:10px;opacity:.7;">(${p.atenciones[t.key].at})</span>` : ""}
           </label>`;
         }).join("")}
@@ -1908,17 +2101,17 @@ function toggleTratamiento(dni, key, checked) {
 // ---------- RESUMEN (VET) ----------
 function renderResumenVet() {
   const filtro = (document.getElementById("vfiltro")?.value || "").trim().toLowerCase();
-  const list = Object.values(vetPatients).filter(p => !filtro || p.dni.includes(filtro) || (p.nombre || "").toLowerCase().includes(filtro) || (p.mnombre || "").toLowerCase().includes(filtro));
+  const list = Object.entries(vetPatients).filter(([k, p]) => !filtro || p.dni.includes(filtro) || (p.nombre || "").toLowerCase().includes(filtro) || (p.mnombre || "").toLowerCase().includes(filtro));
   const table = document.getElementById("vtabla-resumen");
-  const headCols = ["Ficha", "Descargar", "DNI Dueño", "Dueño", "Celular", "Mascota", "Especie", "Raza", "Sexo", "Edad", "Peso (kg)", "Obs.", "Registro", "SISFOH", ...TREATMENTS.map(t => t.label)];
+  const headCols = ["Ficha", "Descargar", "DNI Dueño", "Dueño", "Celular", "Mascota", "Especie", "Raza", "Sexo", "Edad", "Peso (kg)", "Obs.", "Registro", "SISFOH", ...TREATMENTS.map(t => t.label), "Eliminar"];
   let html = `<thead><tr>${headCols.map(h => `<th>${h}</th>`).join("")}</tr></thead><tbody>`;
   if (list.length === 0) {
     html += `<tr><td colspan="${headCols.length}" style="text-align:center;color:#8A8478;padding:20px;">Sin registros todavía.</td></tr>`;
   } else {
-    list.forEach(p => {
+    list.forEach(([key, p]) => {
       html += `<tr>
         <td><button class="check-btn" title="Seleccionar ficha" onclick="toggleFichaSeleccion(this)">✓</button></td>
-        <td><button class="dl-btn" title="Descargar ficha" onclick="descargarFichaDirecta(this,'${p.dni}')">📥</button></td>
+        <td><button class="dl-btn" title="Descargar ficha" onclick="descargarFichaDirecta(this,'${key}')">📥</button></td>
         <td>${p.dni}</td><td>${p.nombre}</td><td>${p.celular}</td>
         <td>${p.mnombre}</td>
         <td>${p.especie}</td><td>${p.raza || "—"}</td><td>${p.sexo || "—"}</td>
@@ -1926,11 +2119,21 @@ function renderResumenVet() {
         <td>${p.triajeOk ? '<span class="ok-ico">✓</span>' : '<span class="no-ico">✕</span>'}</td>
         <td>${p.sisfohOk ? '<span class="ok-ico">✓</span>' : '<span class="no-ico">✕</span>'}</td>
         ${TREATMENTS.map(t => `<td>${p.atenciones?.[t.key]?.done ? '<span class="ok-ico">✓</span>' : '<span class="dash">—</span>'}</td>`).join("")}
+        <td><button class="del-btn" title="Eliminar este registro" onclick="eliminarRegistroVet('${key}','${(p.mnombre || "").replace(/'/g, "\\'")}','${p.dni}')">🗑️</button></td>
       </tr>`;
     });
   }
   html += "</tbody>";
   table.innerHTML = html;
+}
+
+function eliminarRegistroVet(key, mnombre, dni) {
+  const ok = confirm(`¿Eliminar el registro de "${mnombre || "esta mascota"}" (DNI dueño ${dni})?\n\nEsta acción no se puede deshacer.`);
+  if (!ok) return;
+  delete vetPatients[key];
+  if (USE_FIREBASE) colVet.doc(key).delete().catch(err => showToastVet("Error al eliminar en Firebase: " + err.message, "error"));
+  renderAllVet();
+  showToastVet("Registro eliminado ✓");
 }
 
 // ---------- FICHA MASCOTA (MODAL ESTILO CARNET) ----------
