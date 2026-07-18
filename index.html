@@ -228,6 +228,87 @@
   }
   .toast.error { background: #8A5A12; }
 
+  /* ---------- FOTO MASCOTA (captura/preview) ---------- */
+  .foto-field { display: flex; align-items: center; gap: 12px; margin-top: 2px; }
+  .foto-preview {
+    width: 64px; height: 64px; border-radius: 14px; background: #F4F1E8; border: 1.5px dashed #E4DFD3;
+    display: flex; align-items: center; justify-content: center; font-size: 22px; color: #B7B09E;
+    overflow: hidden; flex-shrink: 0;
+  }
+  .foto-preview img { width: 100%; height: 100%; object-fit: cover; }
+  .foto-btn-col { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .foto-btn {
+    border: 1.5px solid #E4DFD3; background: #FCFBF8; border-radius: 12px; padding: 9px 12px;
+    font-size: 13px; font-weight: 700; color: #4A473D; cursor: pointer; font-family: 'Inter', sans-serif;
+    display: flex; align-items: center; gap: 6px; justify-content: center;
+  }
+  .foto-btn:hover { background: #F4F1E8; }
+  .foto-remove { font-size: 11px; color: #B5842B; text-decoration: underline; cursor: pointer; background: none; border: none; padding: 0; text-align: center; }
+
+  /* ---------- LINK EN TABLA (nombre mascota) ---------- */
+  .link-btn {
+    background: none; border: none; padding: 0; cursor: pointer; font-family: 'Inter', sans-serif;
+    font-size: 12.5px; font-weight: 700; color: #0E4A36; text-decoration: underline; text-underline-offset: 2px;
+  }
+  .link-btn:hover { color: #1F7A52; }
+  .check-btn {
+    width: 30px; height: 30px; border-radius: 50%; border: none; cursor: pointer;
+    background: linear-gradient(120deg, #0E4A36, #1F7A52); color: #fff; font-size: 14px; font-weight: 800;
+    display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px rgba(14,74,54,0.35);
+  }
+  .check-btn:hover { filter: brightness(1.1); }
+
+  /* ---------- FICHA MODAL (CARNET) ---------- */
+  .ficha-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(20,24,20,0.6); z-index: 90;
+    align-items: center; justify-content: center; padding: 16px;
+  }
+  .ficha-overlay.open { display: flex; }
+  .ficha-close-wrap { display: flex; justify-content: flex-end; margin-bottom: 8px; width: 100%; max-width: 480px; }
+  .ficha-close {
+    background: rgba(255,255,255,0.9); border: none; color: #23231F; width: 30px; height: 30px; border-radius: 50%;
+    cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+  }
+  .carnet-wrap { display: flex; flex-direction: column; align-items: center; max-height: 92vh; overflow-y: auto; }
+  .carnet-card {
+    width: 100%; max-width: 480px; border-radius: 16px; position: relative; overflow: hidden;
+    background-color: #123B2C;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90' viewBox='0 0 90 90'%3E%3Cg fill='%23ffffff' fill-opacity='0.055'%3E%3Cellipse cx='45' cy='58' rx='14' ry='10'/%3E%3Cellipse cx='27' cy='38' rx='6' ry='7.5'/%3E%3Cellipse cx='38' cy='28' rx='6' ry='7.5'/%3E%3Cellipse cx='52' cy='28' rx='6' ry='7.5'/%3E%3Cellipse cx='63' cy='38' rx='6' ry='7.5'/%3E%3C/g%3E%3C/svg%3E");
+    background-repeat: repeat; box-shadow: 0 24px 60px rgba(0,0,0,0.4); color: #fff; font-family: 'Inter', sans-serif;
+  }
+  .carnet-header { display: flex; justify-content: space-between; align-items: flex-start; padding: 16px 16px 4px 16px; gap: 10px; }
+  .carnet-logo { display: flex; align-items: center; gap: 8px; }
+  .carnet-logo .ico { width: 34px; height: 34px; border-radius: 8px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .carnet-logo .txt { font-size: 10px; font-weight: 700; line-height: 1.25; opacity: 0.95; }
+  .carnet-logo .txt b { font-size: 12px; display: block; }
+  .carnet-badge { background: #C9D97A; color: #123B2C; border-radius: 8px; padding: 6px 10px; text-align: right; font-size: 9px; font-weight: 700; line-height: 1.3; }
+  .carnet-badge .big { font-size: 14px; font-weight: 800; display: block; }
+  .carnet-body { display: flex; gap: 14px; padding: 10px 16px 20px 16px; position: relative; z-index: 1; }
+  .carnet-photo-col { flex-shrink: 0; width: 40%; }
+  .carnet-photo {
+    width: 100%; aspect-ratio: 1/1; border-radius: 4px; border: 3px solid #fff; background: rgba(255,255,255,0.12);
+    overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 46px;
+  }
+  .carnet-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .carnet-id-label { background: #C9D97A; color: #123B2C; font-size: 9px; font-weight: 800; text-align: center; padding: 5px 4px 2px 4px; margin-top: 6px; border-radius: 3px 3px 0 0; letter-spacing: 0.3px; }
+  .carnet-id-value { background: #E4EFC0; color: #123B2C; font-size: 11px; font-weight: 800; text-align: center; padding: 4px; border-radius: 0 0 3px 3px; letter-spacing: 0.5px; }
+  .carnet-fields { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .carnet-field { background: #B7CB8C; border-radius: 3px; padding: 5px 9px; }
+  .carnet-field-row { display: flex; gap: 6px; }
+  .carnet-field-row .carnet-field { flex: 1; }
+  .carnet-field .f-lbl { font-size: 8.5px; font-weight: 700; color: #2E4325; opacity: 0.85; }
+  .carnet-field .f-val { font-size: 12px; font-weight: 800; color: #12240D; margin-top: 1px; word-break: break-word; }
+  .carnet-status-row { display: flex; gap: 6px; margin-top: 2px; }
+  .carnet-status-pill { flex: 1; text-align: center; font-size: 9.5px; font-weight: 800; padding: 5px 4px; border-radius: 3px; }
+  .carnet-status-pill.ok { background: #C9D97A; color: #123B2C; }
+  .carnet-status-pill.bad { background: rgba(255,255,255,0.18); color: #fff; }
+  .carnet-treat-wrap { padding: 0 16px 18px 16px; position: relative; z-index: 1; }
+  .carnet-treat-title { font-size: 9.5px; font-weight: 800; opacity: 0.8; letter-spacing: 0.4px; margin-bottom: 5px; }
+  .carnet-treat-list { display: flex; flex-wrap: wrap; gap: 5px; }
+  .carnet-treat-chip { font-size: 10px; font-weight: 700; padding: 4px 9px; border-radius: 999px; background: rgba(255,255,255,0.12); color: #fff; }
+  .carnet-treat-chip.done { background: #C9D97A; color: #123B2C; }
+
   .footer-note { text-align: center; font-size: 11px; color: #B7B09E; margin-top: 30px; }
 
   /* ---------- SORTEO (RULETA) ---------- */
@@ -682,7 +763,6 @@
           <div class="field-wrap"><span class="field-ico">🪪</span><input class="input" id="v-dni" placeholder="N.° DNI (8 dígitos)" maxlength="8" inputmode="numeric"></div>
           <div class="field-wrap"><span class="field-ico">👤</span><input class="input" id="v-nombre" placeholder="Nombres y apellidos"></div>
           <div class="field-wrap"><span class="field-ico">📞</span><input class="input" id="v-celular" placeholder="Celular" maxlength="9" inputmode="numeric"></div>
-          <div class="field-wrap"><span class="field-ico">🏠</span><input class="input" id="v-direccion" placeholder="Dirección"></div>
 
           <div style="font-size:12.5px;font-weight:800;color:#8A8478;margin-top:10px;">DATOS DE LA MASCOTA</div>
           <div class="field-wrap"><span class="field-ico">🐾</span><input class="input" id="v-mnombre" placeholder="Nombre del perrito/mascota"></div>
@@ -699,7 +779,17 @@
           <div class="field-wrap"><span class="field-ico">⚖️</span><input class="input" id="v-mpeso" placeholder="Peso (kg)" maxlength="6" inputmode="decimal"></div>
           <div class="field-wrap"><span class="field-ico">📝</span><input class="input" id="v-obs" placeholder="Observaciones"></div>
 
-          <button class="btn-primary" type="submit">Registrar</button>
+          <div style="font-size:11px;font-weight:700;color:#8A8478;margin-top:2px;">Foto de la mascota</div>
+          <div class="foto-field">
+            <div class="foto-preview" id="v-foto-preview">🐾</div>
+            <div class="foto-btn-col">
+              <label class="foto-btn" for="v-foto-input">📷 Tomar / subir foto</label>
+              <input type="file" id="v-foto-input" accept="image/*" capture="environment" style="display:none;" onchange="handleFotoVetChange(event)">
+              <button type="button" class="foto-remove" id="v-foto-remove" style="display:none;" onclick="clearFotoVet()">Quitar foto</button>
+            </div>
+          </div>
+
+          <button class="btn-primary" type="submit">💾 Guardar</button>
         </form>
         <div id="v-msg"></div>
       </div>
@@ -773,6 +863,13 @@
 </div>
 
 <div class="toast" id="toast-vet"></div>
+
+<div class="ficha-overlay" id="ficha-overlay" onclick="if(event.target===this) closeFichaVet()">
+  <div class="carnet-wrap">
+    <div class="ficha-close-wrap"><button class="ficha-close" onclick="closeFichaVet()">✕</button></div>
+    <div class="carnet-card" id="ficha-card"></div>
+  </div>
+</div>
 
 </div><!-- /app-veterinaria -->
 
@@ -1608,12 +1705,57 @@ function renderStatsVet() {
 }
 
 // ---------- REGISTRO (VET) ----------
+let vFotoDataURL = "";
+function handleFotoVetChange(e) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  if (!file.type.startsWith("image/")) {
+    showToastVet("El archivo elegido no es una imagen.", "error");
+    e.target.value = "";
+    return;
+  }
+  const reader = new FileReader();
+  reader.onerror = () => showToastVet("No se pudo leer la foto. Intenta de nuevo.", "error");
+  reader.onload = () => {
+    const img = new Image();
+    img.onerror = () => showToastVet("No se pudo procesar la foto. Prueba con otra imagen.", "error");
+    img.onload = () => {
+      // Redimensiona y comprime para evitar errores de guardado por fotos muy pesadas
+      const MAX_SIDE = 480;
+      let w = img.width, h = img.height;
+      if (w > h && w > MAX_SIDE) { h = Math.round(h * (MAX_SIDE / w)); w = MAX_SIDE; }
+      else if (h >= w && h > MAX_SIDE) { w = Math.round(w * (MAX_SIDE / h)); h = MAX_SIDE; }
+      const canvas = document.createElement("canvas");
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, w, h);
+      try {
+        vFotoDataURL = canvas.toDataURL("image/jpeg", 0.72);
+      } catch (err) {
+        showToastVet("No se pudo comprimir la foto: " + err.message, "error");
+        return;
+      }
+      const prev = document.getElementById("v-foto-preview");
+      prev.innerHTML = `<img src="${vFotoDataURL}" alt="Foto mascota">`;
+      document.getElementById("v-foto-remove").style.display = "block";
+      showToastVet("Foto lista ✓");
+    };
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+}
+function clearFotoVet() {
+  vFotoDataURL = "";
+  document.getElementById("v-foto-input").value = "";
+  document.getElementById("v-foto-preview").innerHTML = "🐾";
+  document.getElementById("v-foto-remove").style.display = "none";
+}
+
 document.getElementById("form-vregistro").addEventListener("submit", function(e) {
   e.preventDefault();
   const dni = document.getElementById("v-dni").value.trim();
   const nombre = document.getElementById("v-nombre").value.trim();
   const celular = document.getElementById("v-celular").value.trim();
-  const direccion = document.getElementById("v-direccion").value.trim();
   const mnombre = document.getElementById("v-mnombre").value.trim();
   const especie = document.getElementById("v-especie").value.trim();
   const raza = document.getElementById("v-raza").value.trim();
@@ -1626,25 +1768,27 @@ document.getElementById("form-vregistro").addEventListener("submit", function(e)
   if (!/^\d{8}$/.test(dni)) return setMsg(msgEl, "error", "El DNI del dueño debe tener 8 dígitos.");
   if (!nombre) return setMsg(msgEl, "error", "Ingresa nombres y apellidos del dueño.");
   if (!celular) return setMsg(msgEl, "error", "Ingresa un celular.");
-  if (!direccion) return setMsg(msgEl, "error", "Ingresa una dirección.");
   if (!mnombre) return setMsg(msgEl, "error", "Ingresa el nombre de la mascota.");
   if (!especie) return setMsg(msgEl, "error", "Ingresa la especie de la mascota.");
   if (!sexo) return setMsg(msgEl, "error", "Selecciona el sexo de la mascota (Macho o Hembra).");
 
   const existing = vetPatients[dni] || { atenciones: emptyTreatments() };
   const nuevo = {
-    ...existing, dni, nombre, celular, direccion,
+    ...existing, dni, nombre, celular,
     mnombre, especie, raza, sexo, medad, mpeso, obs,
+    foto: vFotoDataURL || existing.foto || "",
     triajeOk: true, triajeAt: now(), atenciones: existing.atenciones || emptyTreatments(),
   };
   vetPatients[dni] = nuevo;
   if (USE_FIREBASE) colVet.doc(dni).set(nuevo).catch(err => showToastVet("Error al guardar en Firebase: " + err.message, "error"));
 
-  setMsg(msgEl, "ok", `Registrado: ${nombre} (DNI ${dni}) · Mascota: ${mnombre}. Ahora debe pasar por SISFOH.`);
+  setMsg(msgEl, "ok", `Guardado: ${nombre} (DNI ${dni}) · Mascota: ${mnombre}. Ahora debe pasar por SISFOH.`);
   document.getElementById("form-vregistro").reset();
   vSexoSeleccionado = "";
+  clearFotoVet();
   document.querySelectorAll('[data-vsexo]').forEach(el => el.classList.remove("selected"));
   renderAllVet();
+  showToastVet("Registro guardado y formulario limpio ✓");
 });
 
 // ---------- SISFOH (VET) ----------
@@ -1702,7 +1846,7 @@ function renderVetAtencionPanel() {
   wrap.innerHTML = `
     <div class="found-box">
       <div class="found-name">${p.nombre} <span style="color:#8A8478;font-weight:600;">· DNI ${p.dni}</span></div>
-      <div class="found-meta">${p.celular} · ${p.direccion}</div>
+      <div class="found-meta">${p.celular}</div>
       <div class="pet-badge">🐾 ${p.mnombre} · ${p.especie}${p.raza ? " · " + p.raza : ""}${p.sexo ? " · " + p.sexo : ""}${p.medad ? " · " + p.medad + " (edad)" : ""}${p.mpeso ? " · " + p.mpeso + " kg" : ""}</div>
       ${p.obs ? `<div class="found-meta" style="margin-top:4px;">Obs: ${p.obs}</div>` : ""}
       <div class="treat-grid">
@@ -1732,15 +1876,17 @@ function renderResumenVet() {
   const filtro = (document.getElementById("vfiltro")?.value || "").trim().toLowerCase();
   const list = Object.values(vetPatients).filter(p => !filtro || p.dni.includes(filtro) || (p.nombre || "").toLowerCase().includes(filtro) || (p.mnombre || "").toLowerCase().includes(filtro));
   const table = document.getElementById("vtabla-resumen");
-  const headCols = ["DNI Dueño", "Dueño", "Celular", "Dirección", "Mascota", "Especie", "Raza", "Sexo", "Edad", "Peso (kg)", "Obs.", "Registro", "SISFOH", ...TREATMENTS.map(t => t.label)];
+  const headCols = ["Ficha", "DNI Dueño", "Dueño", "Celular", "Mascota", "Especie", "Raza", "Sexo", "Edad", "Peso (kg)", "Obs.", "Registro", "SISFOH", ...TREATMENTS.map(t => t.label)];
   let html = `<thead><tr>${headCols.map(h => `<th>${h}</th>`).join("")}</tr></thead><tbody>`;
   if (list.length === 0) {
     html += `<tr><td colspan="${headCols.length}" style="text-align:center;color:#8A8478;padding:20px;">Sin registros todavía.</td></tr>`;
   } else {
     list.forEach(p => {
       html += `<tr>
-        <td>${p.dni}</td><td>${p.nombre}</td><td>${p.celular}</td><td>${p.direccion}</td>
-        <td>${p.mnombre}</td><td>${p.especie}</td><td>${p.raza || "—"}</td><td>${p.sexo || "—"}</td>
+        <td><button class="check-btn" title="Ver ficha" onclick="openFichaVet('${p.dni}')">✓</button></td>
+        <td>${p.dni}</td><td>${p.nombre}</td><td>${p.celular}</td>
+        <td><button class="link-btn" onclick="openFichaVet('${p.dni}')">${p.mnombre}</button></td>
+        <td>${p.especie}</td><td>${p.raza || "—"}</td><td>${p.sexo || "—"}</td>
         <td>${p.medad || "—"}</td><td>${p.mpeso || "—"}</td><td>${p.obs || "—"}</td>
         <td>${p.triajeOk ? '<span class="ok-ico">✓</span>' : '<span class="no-ico">✕</span>'}</td>
         <td>${p.sisfohOk ? '<span class="ok-ico">✓</span>' : '<span class="no-ico">✕</span>'}</td>
@@ -1750,6 +1896,59 @@ function renderResumenVet() {
   }
   html += "</tbody>";
   table.innerHTML = html;
+}
+
+// ---------- FICHA MASCOTA (MODAL ESTILO CARNET) ----------
+function openFichaVet(dni) {
+  const p = vetPatients[dni];
+  if (!p) return;
+  const foto = p.foto ? `<img src="${p.foto}" alt="${p.mnombre}">` : "🐾";
+  const fechaEmision = p.triajeAt ? p.triajeAt.split(" ")[0] : "—";
+  const treatChips = TREATMENTS.map(t => {
+    const done = p.atenciones?.[t.key]?.done;
+    return `<span class="carnet-treat-chip${done ? " done" : ""}">${t.ico} ${t.label}${done ? " ✓" : ""}</span>`;
+  }).join("");
+  document.getElementById("ficha-card").innerHTML = `
+    <div class="carnet-header">
+      <div class="carnet-logo">
+        <div class="ico">🐾</div>
+        <div class="txt">MUNICIPALIDAD<br><b>DISTRITAL DE<br>LURIGANCHO</b></div>
+      </div>
+      <div class="carnet-badge">SUBGERENCIA DE<span class="big">SALUD PÚBLICA</span>Y PROGRAMAS SOCIALES</div>
+    </div>
+    <div class="carnet-body">
+      <div class="carnet-photo-col">
+        <div class="carnet-photo">${foto}</div>
+        <div class="carnet-id-label">IDENTIFICACIÓN</div>
+        <div class="carnet-id-value">DNI-${p.dni}</div>
+      </div>
+      <div class="carnet-fields">
+        <div class="carnet-field"><div class="f-lbl">NOMBRE DE LA MASCOTA</div><div class="f-val">${p.mnombre || "—"}</div></div>
+        <div class="carnet-field-row">
+          <div class="carnet-field"><div class="f-lbl">RAZA</div><div class="f-val">${p.raza || "—"}</div></div>
+          <div class="carnet-field"><div class="f-lbl">SEXO</div><div class="f-val">${p.sexo || "—"}</div></div>
+        </div>
+        <div class="carnet-field-row">
+          <div class="carnet-field"><div class="f-lbl">ESPECIE</div><div class="f-val">${p.especie || "—"}</div></div>
+          <div class="carnet-field"><div class="f-lbl">EDAD</div><div class="f-val">${p.medad || "—"}</div></div>
+        </div>
+        <div class="carnet-field"><div class="f-lbl">FECHA DE EMISIÓN</div><div class="f-val">${fechaEmision}</div></div>
+        <div class="carnet-field"><div class="f-lbl">NOMBRE DEL PROPIETARIO</div><div class="f-val">${p.nombre || "—"}</div></div>
+        <div class="carnet-status-row">
+          <div class="carnet-status-pill ${p.triajeOk ? "ok" : "bad"}">REGISTRO ${p.triajeOk ? "✓" : "✕"}</div>
+          <div class="carnet-status-pill ${p.sisfohOk ? "ok" : "bad"}">SISFOH ${p.sisfohOk ? "✓" : "✕"}</div>
+        </div>
+      </div>
+    </div>
+    <div class="carnet-treat-wrap">
+      <div class="carnet-treat-title">ATENCIONES</div>
+      <div class="carnet-treat-list">${treatChips}</div>
+    </div>
+  `;
+  document.getElementById("ficha-overlay").classList.add("open");
+}
+function closeFichaVet() {
+  document.getElementById("ficha-overlay").classList.remove("open");
 }
 async function vaciarTodoVet() {
   if (!confirm("¿Borrar todos los registros veterinarios? Esta acción no se puede deshacer.")) return;
@@ -1772,7 +1971,7 @@ function exportExcelVet() {
 
   const rows = list.map(p => {
     const row = {
-      "DNI Dueño": p.dni, "Dueño": p.nombre, "Celular": p.celular, "Dirección": p.direccion,
+      "DNI Dueño": p.dni, "Dueño": p.nombre, "Celular": p.celular,
       "Mascota": p.mnombre, "Especie": p.especie, "Raza": p.raza || "", "Sexo": p.sexo || "",
       "Edad": p.medad || "", "Peso (kg)": p.mpeso || "", "Observaciones": p.obs || "",
       "Registro": p.triajeOk ? "Sí" : "No", "SISFOH": p.sisfohOk ? "Sí" : "No",
