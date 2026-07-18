@@ -252,11 +252,22 @@
   }
   .link-btn:hover { color: #1F7A52; }
   .check-btn {
-    width: 30px; height: 30px; border-radius: 50%; border: none; cursor: pointer;
-    background: linear-gradient(120deg, #0E4A36, #1F7A52); color: #fff; font-size: 14px; font-weight: 800;
-    display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px rgba(14,74,54,0.35);
+    width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid #D8D2C2; cursor: pointer;
+    background: #fff; color: transparent; font-size: 14px; font-weight: 800;
+    display: inline-flex; align-items: center; justify-content: center; transition: all .18s ease;
   }
-  .check-btn:hover { filter: brightness(1.1); }
+  .check-btn:hover { border-color: #1F7A52; }
+  .check-btn.checked {
+    background: linear-gradient(120deg, #0E4A36, #1F7A52); color: #fff; border-color: transparent;
+    box-shadow: 0 3px 8px rgba(14,74,54,0.35);
+  }
+  .dl-btn {
+    width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid #D8D2C2; cursor: pointer;
+    background: #fff; color: #0E4A36; font-size: 14px;
+    display: inline-flex; align-items: center; justify-content: center; transition: all .18s ease;
+  }
+  .dl-btn:hover { border-color: #1F7A52; background: #EAF7EF; }
+  .dl-btn:disabled { opacity: 0.6; cursor: default; }
 
   /* ---------- FICHA MODAL (CARNET) ---------- */
   .ficha-overlay {
@@ -279,7 +290,8 @@
   }
   .carnet-header { display: flex; justify-content: space-between; align-items: flex-start; padding: 16px 16px 4px 16px; gap: 10px; }
   .carnet-logo { display: flex; align-items: center; gap: 8px; }
-  .carnet-logo .ico { width: 34px; height: 34px; border-radius: 8px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .carnet-logo .ico { width: 34px; height: 34px; border-radius: 8px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; overflow: hidden; }
+  .carnet-logo .ico img { width: 100%; height: 100%; object-fit: contain; }
   .carnet-logo .txt { font-size: 10px; font-weight: 700; line-height: 1.25; opacity: 0.95; }
   .carnet-logo .txt b { font-size: 12px; display: block; }
   .carnet-badge { background: #C9D97A; color: #123B2C; border-radius: 8px; padding: 6px 10px; text-align: right; font-size: 9px; font-weight: 700; line-height: 1.3; }
@@ -308,6 +320,15 @@
   .carnet-treat-list { display: flex; flex-wrap: wrap; gap: 5px; }
   .carnet-treat-chip { font-size: 10px; font-weight: 700; padding: 4px 9px; border-radius: 999px; background: rgba(255,255,255,0.12); color: #fff; }
   .carnet-treat-chip.done { background: #C9D97A; color: #123B2C; }
+
+  .carnet-download-btn {
+    width: 100%; max-width: 480px; margin-top: 10px; background: #0E4A36; color: #fff; border: none;
+    border-radius: 12px; padding: 12px 16px; font-weight: 700; font-size: 14px; cursor: pointer;
+    font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; gap: 8px;
+    box-shadow: 0 8px 18px rgba(14,74,54,0.3);
+  }
+  .carnet-download-btn:hover { background: #0B3B2E; }
+  .carnet-download-btn:disabled { opacity: 0.6; cursor: wait; }
 
   .footer-note { text-align: center; font-size: 11px; color: #B7B09E; margin-top: 30px; }
 
@@ -868,6 +889,7 @@
   <div class="carnet-wrap">
     <div class="ficha-close-wrap"><button class="ficha-close" onclick="closeFichaVet()">✕</button></div>
     <div class="carnet-card" id="ficha-card"></div>
+    <button class="carnet-download-btn" id="carnet-download-btn" onclick="descargarFichaVet()">📥 Descargar ficha</button>
   </div>
 </div>
 
@@ -876,6 +898,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
 /* =========================================================
    🔥 CONFIGURACIÓN DE FIREBASE — PEGA AQUÍ TUS DATOS
@@ -1534,9 +1557,13 @@ function abrirAppReal(which) {
   }
 }
 // Reuse the municipal logo already embedded in the human header for the landing screen
+let MUNI_LOGO_SRC = "";
 (function syncLandingLogo() {
   const src = document.querySelector("#app-humano .logo-img")?.src;
-  if (src) document.getElementById("landing-logo-img").src = src;
+  if (src) {
+    document.getElementById("landing-logo-img").src = src;
+    MUNI_LOGO_SRC = src;
+  }
 })();
 
 function chSvgMarkup(suffix, size) {
@@ -1859,7 +1886,14 @@ function renderVetAtencionPanel() {
           </label>`;
         }).join("")}
       </div>
+      <button class="btn-primary" style="margin-top:14px;width:100%;" onclick="guardarAtencionVet()">💾 Guardar</button>
     </div>`;
+}
+function guardarAtencionVet() {
+  document.getElementById("vatn-dni").value = "";
+  vatnResult = null;
+  document.getElementById("vatn-result").innerHTML = "";
+  showToastVet("Atención guardada ✓");
 }
 function toggleTratamiento(dni, key, checked) {
   const p = vetPatients[dni];
@@ -1876,16 +1910,17 @@ function renderResumenVet() {
   const filtro = (document.getElementById("vfiltro")?.value || "").trim().toLowerCase();
   const list = Object.values(vetPatients).filter(p => !filtro || p.dni.includes(filtro) || (p.nombre || "").toLowerCase().includes(filtro) || (p.mnombre || "").toLowerCase().includes(filtro));
   const table = document.getElementById("vtabla-resumen");
-  const headCols = ["Ficha", "DNI Dueño", "Dueño", "Celular", "Mascota", "Especie", "Raza", "Sexo", "Edad", "Peso (kg)", "Obs.", "Registro", "SISFOH", ...TREATMENTS.map(t => t.label)];
+  const headCols = ["Ficha", "Descargar", "DNI Dueño", "Dueño", "Celular", "Mascota", "Especie", "Raza", "Sexo", "Edad", "Peso (kg)", "Obs.", "Registro", "SISFOH", ...TREATMENTS.map(t => t.label)];
   let html = `<thead><tr>${headCols.map(h => `<th>${h}</th>`).join("")}</tr></thead><tbody>`;
   if (list.length === 0) {
     html += `<tr><td colspan="${headCols.length}" style="text-align:center;color:#8A8478;padding:20px;">Sin registros todavía.</td></tr>`;
   } else {
     list.forEach(p => {
       html += `<tr>
-        <td><button class="check-btn" title="Ver ficha" onclick="openFichaVet('${p.dni}')">✓</button></td>
+        <td><button class="check-btn" title="Seleccionar ficha" onclick="toggleFichaSeleccion(this)">✓</button></td>
+        <td><button class="dl-btn" title="Descargar ficha" onclick="descargarFichaDirecta(this,'${p.dni}')">📥</button></td>
         <td>${p.dni}</td><td>${p.nombre}</td><td>${p.celular}</td>
-        <td><button class="link-btn" onclick="openFichaVet('${p.dni}')">${p.mnombre}</button></td>
+        <td>${p.mnombre}</td>
         <td>${p.especie}</td><td>${p.raza || "—"}</td><td>${p.sexo || "—"}</td>
         <td>${p.medad || "—"}</td><td>${p.mpeso || "—"}</td><td>${p.obs || "—"}</td>
         <td>${p.triajeOk ? '<span class="ok-ico">✓</span>' : '<span class="no-ico">✕</span>'}</td>
@@ -1899,19 +1934,66 @@ function renderResumenVet() {
 }
 
 // ---------- FICHA MASCOTA (MODAL ESTILO CARNET) ----------
-function openFichaVet(dni) {
+let currentFichaDni = null;
+
+function toggleFichaSeleccion(btn) {
+  document.querySelectorAll(".check-btn.checked").forEach(b => b.classList.remove("checked"));
+  btn.classList.add("checked");
+}
+
+async function descargarFichaDirecta(btn, dni) {
   const p = vetPatients[dni];
   if (!p) return;
+  if (typeof html2canvas === "undefined") {
+    showToastVet("No se pudo cargar el generador de imagen. Revisa tu conexión.", "error");
+    return;
+  }
+  const original = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "…";
+  showToastVet("Generando imagen...");
+
+  const clone = document.createElement("div");
+  clone.className = "carnet-card";
+  clone.innerHTML = buildFichaCardHtml(p);
+  clone.querySelectorAll(".no-download").forEach(el => el.remove());
+  clone.style.width = "700px";
+  clone.style.position = "fixed";
+  clone.style.left = "-9999px";
+  clone.style.top = "0";
+  document.body.appendChild(clone);
+
+  try {
+    const canvas = await html2canvas(clone, { backgroundColor: null, scale: 2, useCORS: true });
+    const link = document.createElement("a");
+    const nombreArchivo = `ficha_${(p.mnombre || "mascota").trim().replace(/\s+/g, "_")}_${p.dni}.png`;
+    link.download = nombreArchivo;
+    link.href = canvas.toDataURL("image/png");
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    showToastVet("Ficha descargada ✓");
+  } catch (err) {
+    showToastVet("No se pudo generar la imagen: " + err.message, "error");
+  } finally {
+    document.body.removeChild(clone);
+    btn.disabled = false;
+    btn.textContent = original;
+  }
+}
+
+function buildFichaCardHtml(p) {
   const foto = p.foto ? `<img src="${p.foto}" alt="${p.mnombre}">` : "🐾";
+  const logoHtml = MUNI_LOGO_SRC ? `<img src="${MUNI_LOGO_SRC}" alt="Logo Municipalidad">` : "🐾";
   const fechaEmision = p.triajeAt ? p.triajeAt.split(" ")[0] : "—";
   const treatChips = TREATMENTS.map(t => {
     const done = p.atenciones?.[t.key]?.done;
     return `<span class="carnet-treat-chip${done ? " done" : ""}">${t.ico} ${t.label}${done ? " ✓" : ""}</span>`;
   }).join("");
-  document.getElementById("ficha-card").innerHTML = `
+  return `
     <div class="carnet-header">
       <div class="carnet-logo">
-        <div class="ico">🐾</div>
+        <div class="ico">${logoHtml}</div>
         <div class="txt">MUNICIPALIDAD<br><b>DISTRITAL DE<br>LURIGANCHO</b></div>
       </div>
       <div class="carnet-badge">SUBGERENCIA DE<span class="big">SALUD PÚBLICA</span>Y PROGRAMAS SOCIALES</div>
@@ -1934,21 +2016,69 @@ function openFichaVet(dni) {
         </div>
         <div class="carnet-field"><div class="f-lbl">FECHA DE EMISIÓN</div><div class="f-val">${fechaEmision}</div></div>
         <div class="carnet-field"><div class="f-lbl">NOMBRE DEL PROPIETARIO</div><div class="f-val">${p.nombre || "—"}</div></div>
-        <div class="carnet-status-row">
+        <div class="carnet-status-row no-download">
           <div class="carnet-status-pill ${p.triajeOk ? "ok" : "bad"}">REGISTRO ${p.triajeOk ? "✓" : "✕"}</div>
           <div class="carnet-status-pill ${p.sisfohOk ? "ok" : "bad"}">SISFOH ${p.sisfohOk ? "✓" : "✕"}</div>
         </div>
       </div>
     </div>
-    <div class="carnet-treat-wrap">
+    <div class="carnet-treat-wrap no-download">
       <div class="carnet-treat-title">ATENCIONES</div>
       <div class="carnet-treat-list">${treatChips}</div>
     </div>
   `;
+}
+
+function openFichaVet(dni) {
+  const p = vetPatients[dni];
+  if (!p) return;
+  currentFichaDni = dni;
+  document.getElementById("ficha-card").innerHTML = buildFichaCardHtml(p);
   document.getElementById("ficha-overlay").classList.add("open");
 }
 function closeFichaVet() {
   document.getElementById("ficha-overlay").classList.remove("open");
+  document.querySelectorAll(".check-btn.checked").forEach(b => b.classList.remove("checked"));
+}
+async function descargarFichaVet() {
+  const dni = currentFichaDni;
+  const p = vetPatients[dni];
+  const original = document.getElementById("ficha-card");
+  if (!p || !original) return;
+  if (typeof html2canvas === "undefined") {
+    showToastVet("No se pudo cargar el generador de imagen. Revisa tu conexión.", "error");
+    return;
+  }
+  const btn = document.getElementById("carnet-download-btn");
+  const btnTxt = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "Generando imagen...";
+
+  const clone = original.cloneNode(true);
+  clone.querySelectorAll(".no-download").forEach(el => el.remove());
+  clone.style.width = "700px";
+  clone.style.position = "fixed";
+  clone.style.left = "-9999px";
+  clone.style.top = "0";
+  document.body.appendChild(clone);
+
+  try {
+    const canvas = await html2canvas(clone, { backgroundColor: null, scale: 2, useCORS: true });
+    const link = document.createElement("a");
+    const nombreArchivo = `ficha_${(p.mnombre || "mascota").trim().replace(/\s+/g, "_")}_${p.dni}.png`;
+    link.download = nombreArchivo;
+    link.href = canvas.toDataURL("image/png");
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    showToastVet("Ficha descargada ✓");
+  } catch (err) {
+    showToastVet("No se pudo generar la imagen: " + err.message, "error");
+  } finally {
+    document.body.removeChild(clone);
+    btn.disabled = false;
+    btn.textContent = btnTxt;
+  }
 }
 async function vaciarTodoVet() {
   if (!confirm("¿Borrar todos los registros veterinarios? Esta acción no se puede deshacer.")) return;
