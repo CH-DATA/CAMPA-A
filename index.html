@@ -287,9 +287,83 @@
     .side-btn { flex-direction: column; min-width: 78px; text-align: center; font-size: 11px; }
     .servicios-grid { grid-template-columns: repeat(2, 1fr); }
   }
+
+  /* ---------- LANDING / PORTAL ---------- */
+  .landing-screen {
+    min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 30px 16px;
+  }
+  .landing-head { text-align: center; margin-bottom: 34px; }
+  .landing-logo { width: 66px; height: 66px; border-radius: 14px; background: #fff; padding: 4px; box-shadow: 0 8px 18px rgba(0,0,0,0.15); object-fit: contain; margin-bottom: 12px; }
+  .landing-title { font-size: 24px; font-weight: 800; }
+  .landing-sub { font-size: 13.5px; color: #8A8478; margin-top: 4px; }
+  .portal-grid { display: flex; gap: 22px; flex-wrap: wrap; justify-content: center; max-width: 640px; }
+  .portal-btn {
+    width: 250px; border: none; border-radius: 22px; cursor: pointer; text-align: left;
+    padding: 26px 22px; color: #fff; position: relative; overflow: hidden; font-family: 'Inter', sans-serif;
+    box-shadow: 0 14px 30px rgba(15,50,35,0.22); transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .portal-btn:hover { transform: translateY(-6px); box-shadow: 0 20px 38px rgba(15,50,35,0.30); }
+  .portal-btn::after {
+    content: ""; position: absolute; right: -30px; bottom: -40px; width: 150px; height: 150px;
+    border-radius: 50%; background: rgba(255,255,255,0.10);
+  }
+  .portal-btn.medico { background: linear-gradient(135deg, #0E4A36 0%, #123B2C 100%); }
+  .portal-btn.vet { background: linear-gradient(135deg, #8A5A12 0%, #B5760F 100%); }
+  .portal-ico-wrap {
+    width: 56px; height: 56px; border-radius: 16px; background: rgba(255,255,255,0.16);
+    display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 16px;
+    position: relative; z-index: 1;
+  }
+  .portal-name { font-size: 18px; font-weight: 800; font-family: 'Baloo 2', sans-serif; position: relative; z-index: 1; }
+  .portal-desc { font-size: 12.5px; opacity: 0.85; margin-top: 6px; line-height: 1.4; position: relative; z-index: 1; }
+  .portal-arrow { margin-top: 16px; font-size: 12px; font-weight: 700; opacity: 0.9; position: relative; z-index: 1; }
+
+  .back-btn {
+    background: rgba(255,255,255,0.14); border: none; border-radius: 10px; padding: 8px 12px;
+    cursor: pointer; color: #fff; font-size: 12.5px; font-weight: 700; font-family: 'Inter', sans-serif;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  /* ---------- VET ATENCION CHECKLIST ---------- */
+  .treat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 14px; }
+  .treat-item {
+    display: flex; align-items: center; gap: 8px; padding: 10px 10px; border-radius: 12px;
+    border: 1.5px solid #E4DFD3; background: #FCFBF8; cursor: pointer; font-size: 12.5px; font-weight: 600; color: #6E6A5E;
+  }
+  .treat-item.checked { background: #EAF7EF; border-color: #CFEBDA; color: #2E7D4F; }
+  .treat-item input { width: 16px; height: 16px; accent-color: #0E4A36; flex-shrink: 0; }
+  .pet-badge {
+    display: inline-flex; align-items: center; gap: 4px; background: #FDF3E0; color: #8A5A12;
+    border-radius: 999px; font-size: 11px; font-weight: 700; padding: 3px 10px; margin-top: 4px;
+  }
 </style>
 </head>
 <body>
+
+<div class="landing-screen" id="landing-screen">
+  <div class="landing-head">
+    <img src="data:image/jpeg;base64,PLACEHOLDER_LOGO" alt="Logo Municipalidad Distrital de Lurigancho" class="landing-logo" id="landing-logo-img">
+    <div class="landing-title disp">Campaña de Salud</div>
+    <div class="landing-sub">Municipalidad Distrital de Lurigancho · Elige el módulo al que deseas ingresar</div>
+  </div>
+  <div class="portal-grid">
+    <button class="portal-btn medico" onclick="openApp('humano')">
+      <div class="portal-ico-wrap">🩺</div>
+      <div class="portal-name disp">Campaña de Salud</div>
+      <div class="portal-desc">Triaje, SISFOH y carpetas de atención para personas.</div>
+      <div class="portal-arrow">Ingresar →</div>
+    </button>
+    <button class="portal-btn vet" onclick="openApp('vet')">
+      <div class="portal-ico-wrap">🐶</div>
+      <div class="portal-name disp">Campaña Veterinaria</div>
+      <div class="portal-desc">Registro del dueño y la mascota, SISFOH y atención veterinaria.</div>
+      <div class="portal-arrow">Ingresar →</div>
+    </button>
+  </div>
+</div>
+
+<div id="app-humano" style="display:none;">
 
 <div class="header">
   <div class="header-row">
@@ -300,7 +374,10 @@
         <div class="h-sub">Municipalidad Distrital de Lurigancho</div>
       </div>
     </div>
-    <button class="refresh-btn" onclick="renderAll()" title="Actualizar vista">⟳</button>
+    <div style="display:flex; gap:8px;">
+      <button class="back-btn" onclick="goLanding()" title="Volver al inicio">⬅ Portal</button>
+      <button class="refresh-btn" onclick="renderAll()" title="Actualizar vista">⟳</button>
+    </div>
   </div>
 </div>
 
@@ -481,6 +558,153 @@
 </div>
 
 <div class="toast" id="toast"></div>
+
+</div><!-- /app-humano -->
+
+<div id="app-veterinaria" style="display:none;">
+
+<div class="header">
+  <div class="header-row">
+    <div class="h-left">
+      <div class="logo-img" style="display:flex;align-items:center;justify-content:center;font-size:24px;">🐶</div>
+      <div>
+        <div class="h-title disp">Campaña Veterinaria</div>
+        <div class="h-sub">Municipalidad Distrital de Lurigancho</div>
+      </div>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="back-btn" onclick="goLanding()" title="Volver al inicio">⬅ Portal</button>
+      <button class="refresh-btn" onclick="renderAllVet()" title="Actualizar vista">⟳</button>
+    </div>
+  </div>
+</div>
+
+<div class="app-layout">
+
+  <div class="sidebar" id="sidebar-vet"></div>
+
+  <div class="content">
+
+    <div class="tabpanel" id="vpanel-inicio">
+      <div class="card robot-card">
+        <div class="robot-svg-wrap">
+          <div style="width:100px;height:112px;display:flex;align-items:center;justify-content:center;font-size:64px;">🐾</div>
+        </div>
+        <div class="robot-txt">
+          <div class="robot-name">⚡ ASISTENTE CH · VETERINARIA</div>
+          <div class="robot-title disp">Soy CH, tu asistente digital</div>
+          <div class="robot-sub">Acompaño el Registro del dueño y su mascota, la validación SISFOH y la atención veterinaria para que nadie se pierda en el camino.</div>
+        </div>
+      </div>
+
+      <div class="stats-grid" id="vstats-grid"></div>
+
+      <div class="card lock-note">
+        <div style="font-size:18px">🔒</div>
+        <div class="txt">La <b>Atención Veterinaria</b> no se realizará a ningún dueño si su DNI no tiene <b>Registro</b> y <b>SISFOH</b> completos. El DNI del dueño es la llave que conecta ambos pasos.</div>
+      </div>
+    </div>
+
+    <div class="tabpanel" id="vpanel-registro">
+      <div class="card form-card">
+        <div class="form-title disp">Registro del Dueño y la Mascota</div>
+        <div class="form-sub">Registra los datos básicos del dueño y de su mascota.</div>
+        <form class="form-col" id="form-vregistro">
+          <div style="font-size:12.5px;font-weight:800;color:#8A8478;margin-top:2px;">DATOS DEL DUEÑO</div>
+          <div class="field-wrap"><span class="field-ico">🪪</span><input class="input" id="v-dni" placeholder="N.° DNI (8 dígitos)" maxlength="8" inputmode="numeric"></div>
+          <div class="field-wrap"><span class="field-ico">👤</span><input class="input" id="v-nombre" placeholder="Nombres y apellidos"></div>
+          <div class="field-wrap"><span class="field-ico">📞</span><input class="input" id="v-celular" placeholder="Celular" maxlength="9" inputmode="numeric"></div>
+          <div class="field-wrap"><span class="field-ico">🏠</span><input class="input" id="v-direccion" placeholder="Dirección"></div>
+
+          <div style="font-size:12.5px;font-weight:800;color:#8A8478;margin-top:10px;">DATOS DE LA MASCOTA</div>
+          <div class="field-wrap"><span class="field-ico">🐾</span><input class="input" id="v-mnombre" placeholder="Nombre del perrito/mascota"></div>
+          <div class="row-gap">
+            <div class="field-wrap"><span class="field-ico">🐕</span><input class="input" id="v-especie" placeholder="Especie (ej. Canino, Felino)"></div>
+            <div class="field-wrap"><span class="field-ico">🎗️</span><input class="input" id="v-raza" placeholder="Raza"></div>
+          </div>
+          <div class="row-gap">
+            <div class="field-wrap"><span class="field-ico">⚥</span><input class="input" id="v-sexo" placeholder="Sexo (Macho/Hembra)"></div>
+            <div class="field-wrap"><span class="field-ico">📅</span><input class="input" id="v-medad" placeholder="Edad" maxlength="4"></div>
+          </div>
+          <div class="field-wrap"><span class="field-ico">⚖️</span><input class="input" id="v-mpeso" placeholder="Peso (kg)" maxlength="6" inputmode="decimal"></div>
+          <div class="field-wrap"><span class="field-ico">📝</span><input class="input" id="v-obs" placeholder="Observaciones"></div>
+
+          <button class="btn-primary" type="submit">Registrar</button>
+        </form>
+        <div id="v-msg"></div>
+      </div>
+    </div>
+
+    <div class="tabpanel" id="vpanel-sisfoh">
+      <div class="card form-card">
+        <div class="form-title disp">Estación SISFOH</div>
+        <div class="form-sub">El DNI del dueño debe existir en Registro primero.</div>
+        <form class="form-col" id="form-vsisfoh">
+          <div class="field-wrap"><span class="field-ico">🪪</span><input class="input" id="vs-dni" placeholder="DNI del dueño (8 dígitos)" maxlength="8" inputmode="numeric"></div>
+          <div class="row-gap">
+            <div class="pill-opt selected" data-vval="si" onclick="selectEstadoVet('si')">Tiene SISFOH</div>
+            <div class="pill-opt" data-vval="no" onclick="selectEstadoVet('no')">No tiene SISFOH</div>
+          </div>
+          <button class="btn-primary" type="submit">Validar SISFOH</button>
+        </form>
+        <div id="vs-msg"></div>
+      </div>
+    </div>
+
+    <div class="tabpanel" id="vpanel-atencion">
+      <div class="card svc-panel" style="max-width:520px;">
+        <div class="svc-head"><span class="ico">🩹</span><span class="name disp">Atención Veterinaria</span></div>
+        <div class="svc-sub">Ingresa el DNI del dueño para registrar la atención de su mascota.</div>
+        <div class="row-gap">
+          <div class="field-wrap"><span class="field-ico">🪪</span><input class="input" id="vatn-dni" placeholder="DNI del dueño (8 dígitos)" maxlength="8" inputmode="numeric"></div>
+          <button class="btn-primary" onclick="lookupVetAtencion()">🔎</button>
+        </div>
+        <div id="vatn-result"></div>
+      </div>
+    </div>
+
+    <div class="tabpanel" id="vpanel-sorteo">
+      <div class="card sorteo-card">
+        <div class="form-title disp">🎡 Sorteo de mascotas</div>
+        <div class="form-sub">Gira la rueda para elegir una mascota al azar entre todas las registradas.</div>
+        <div class="ruleta-wrap">
+          <div class="ruleta-rim" id="vruleta-rim"></div>
+          <div class="ruleta-puntero-wrap">
+            <div class="ruleta-puntero"></div>
+            <div class="ruleta-puntero-pin"></div>
+          </div>
+          <div class="ruleta-disco" id="vruleta-disco"></div>
+          <div class="ruleta-centro" onclick="girarRuletaVet()"><span>GIRAR</span></div>
+        </div>
+        <div class="ruleta-stand"></div>
+        <div class="ruleta-base"></div>
+        <div class="sorteo-count" id="vsorteo-count"></div>
+        <div id="vwinner-box-wrap"></div>
+        <div class="sorteo-list" id="vsorteo-list"></div>
+        <div class="row-gap" style="justify-content:center; margin-top:14px;">
+          <button class="trash-btn" onclick="resetSorteoVet()" title="Restablecer participantes">🔄 Restablecer participantes</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabpanel" id="vpanel-resumen">
+      <div class="resumen-top">
+        <div class="field-wrap"><span class="field-ico">🔎</span><input class="input" id="vfiltro" placeholder="Buscar por DNI o dueño" oninput="renderResumenVet()"></div>
+        <button class="trash-btn" onclick="exportExcelVet()" title="Descargar en Excel" style="color:#0E4A36;">📥</button>
+        <button class="trash-btn" onclick="vaciarTodoVet()" title="Borrar todos los registros">🗑️</button>
+      </div>
+      <div class="card table-wrap">
+        <table class="res" id="vtabla-resumen"></table>
+      </div>
+    </div>
+
+    <div class="footer-note">Datos guardados solo en esta pestaña del navegador (se pierden al cerrar). Para producción, conviene un backend compartido.</div>
+  </div>
+</div>
+
+<div class="toast" id="toast-vet"></div>
+
+</div><!-- /app-veterinaria -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
@@ -1015,9 +1239,406 @@ function renderAll() {
   renderResumen();
   renderSorteo();
 }
+
+/* =========================================================
+   PORTAL / LANDING NAVIGATION
+========================================================= */
+function goLanding() {
+  document.getElementById("landing-screen").style.display = "flex";
+  document.getElementById("app-humano").style.display = "none";
+  document.getElementById("app-veterinaria").style.display = "none";
+}
+function openApp(which) {
+  document.getElementById("landing-screen").style.display = "none";
+  if (which === "humano") {
+    document.getElementById("app-humano").style.display = "block";
+    document.getElementById("app-veterinaria").style.display = "none";
+    renderAll();
+  } else {
+    document.getElementById("app-veterinaria").style.display = "block";
+    document.getElementById("app-humano").style.display = "none";
+    renderAllVet();
+  }
+}
+// Reuse the municipal logo already embedded in the human header for the landing screen
+(function syncLandingLogo() {
+  const src = document.querySelector("#app-humano .logo-img")?.src;
+  if (src) document.getElementById("landing-logo-img").src = src;
+})();
+
+/* =========================================================
+   VETERINARY MODULE
+========================================================= */
+const TREATMENTS = [
+  { key: "esterilizacion", label: "Esterilización", ico: "✂️" },
+  { key: "castracion", label: "Castración", ico: "🩺" },
+  { key: "desparasitacion", label: "Desparasitación", ico: "💊" },
+  { key: "vacunacion", label: "Vacunación", ico: "💉" },
+  { key: "sarna", label: "Tratamiento de sarna", ico: "🧴" },
+  { key: "consultaGeneral", label: "Consulta general", ico: "🐾" },
+];
+
+const VTABS = [
+  { key: "inicio", label: "Inicio", ico: "🏠" },
+  { key: "registro", label: "Registro", ico: "📋" },
+  { key: "sisfoh", label: "SISFOH", ico: "🛡️" },
+  { key: "atencion", label: "Atención", ico: "🩹" },
+  { key: "sorteo", label: "Sortear", ico: "🎡" },
+  { key: "resumen", label: "Resumen", ico: "📊" },
+];
+
+let vetPatients = {};
+let currentVTab = "inicio";
+let vsisfohEstado = "si";
+let vatnResult = null;
+
+function emptyTreatments() {
+  const o = {};
+  TREATMENTS.forEach(t => o[t.key] = { done: false, at: null });
+  return o;
+}
+function showToastVet(text, kind) {
+  const t = document.getElementById("toast-vet");
+  t.textContent = text;
+  t.className = "toast" + (kind === "error" ? " error" : "");
+  t.style.display = "block";
+  setTimeout(() => t.style.display = "none", 3200);
+}
+
+// ---------- SIDEBAR NAV (VET) ----------
+function buildSidebarVet() {
+  const bar = document.getElementById("sidebar-vet");
+  bar.innerHTML = VTABS.map(t => `
+    <button class="side-btn${t.key === currentVTab ? " active" : ""}" onclick="switchVTab('${t.key}')">
+      <span class="ico">${t.ico}</span>${t.label}
+    </button>`).join("") + `
+    <div class="sidebar-foot">
+      <div class="ch-mini">🤖 CH está activo</div>
+    </div>`;
+}
+function switchVTab(key) {
+  currentVTab = key;
+  document.querySelectorAll("#app-veterinaria .tabpanel").forEach(p => p.classList.remove("active"));
+  document.getElementById("vpanel-" + key).classList.add("active");
+  buildSidebarVet();
+  if (key === "resumen") renderResumenVet();
+  if (key === "inicio") renderStatsVet();
+  if (key === "sorteo") renderSorteoVet();
+}
+
+// ---------- INICIO (VET) ----------
+function renderStatsVet() {
+  const list = Object.values(vetPatients);
+  const total = list.length;
+  const validados = list.filter(p => p.triajeOk && p.sisfohOk).length;
+  const atenciones = list.reduce((acc, p) => acc + TREATMENTS.filter(t => p.atenciones?.[t.key]?.done).length, 0);
+  const el = document.getElementById("vstats-grid");
+  el.innerHTML = `
+    <div class="card stat-card"><div class="stat-value disp" style="color:#2E4756">${total}</div><div class="stat-label">Registrados</div></div>
+    <div class="card stat-card"><div class="stat-value disp" style="color:#2E7D4F">${validados}</div><div class="stat-label">Validados</div></div>
+    <div class="card stat-card"><div class="stat-value disp" style="color:#C98A12">${atenciones}</div><div class="stat-label">Atenciones</div></div>
+  `;
+}
+
+// ---------- REGISTRO (VET) ----------
+document.getElementById("form-vregistro").addEventListener("submit", function(e) {
+  e.preventDefault();
+  const dni = document.getElementById("v-dni").value.trim();
+  const nombre = document.getElementById("v-nombre").value.trim();
+  const celular = document.getElementById("v-celular").value.trim();
+  const direccion = document.getElementById("v-direccion").value.trim();
+  const mnombre = document.getElementById("v-mnombre").value.trim();
+  const especie = document.getElementById("v-especie").value.trim();
+  const raza = document.getElementById("v-raza").value.trim();
+  const sexo = document.getElementById("v-sexo").value.trim();
+  const medad = document.getElementById("v-medad").value.trim();
+  const mpeso = document.getElementById("v-mpeso").value.trim();
+  const obs = document.getElementById("v-obs").value.trim();
+  const msgEl = document.getElementById("v-msg");
+
+  if (!/^\d{8}$/.test(dni)) return setMsg(msgEl, "error", "El DNI del dueño debe tener 8 dígitos.");
+  if (!nombre) return setMsg(msgEl, "error", "Ingresa nombres y apellidos del dueño.");
+  if (!celular) return setMsg(msgEl, "error", "Ingresa un celular.");
+  if (!direccion) return setMsg(msgEl, "error", "Ingresa una dirección.");
+  if (!mnombre) return setMsg(msgEl, "error", "Ingresa el nombre de la mascota.");
+  if (!especie) return setMsg(msgEl, "error", "Ingresa la especie de la mascota.");
+
+  const existing = vetPatients[dni] || { atenciones: emptyTreatments() };
+  vetPatients[dni] = {
+    ...existing, dni, nombre, celular, direccion,
+    mnombre, especie, raza, sexo, medad, mpeso, obs,
+    triajeOk: true, triajeAt: now(), atenciones: existing.atenciones || emptyTreatments(),
+  };
+
+  setMsg(msgEl, "ok", `Registrado: ${nombre} (DNI ${dni}) · Mascota: ${mnombre}. Ahora debe pasar por SISFOH.`);
+  document.getElementById("form-vregistro").reset();
+  renderAllVet();
+});
+
+// ---------- SISFOH (VET) ----------
+function selectEstadoVet(val) {
+  vsisfohEstado = val;
+  document.querySelectorAll("#form-vsisfoh .pill-opt").forEach(el => el.classList.toggle("selected", el.dataset.vval === val));
+}
+document.getElementById("form-vsisfoh").addEventListener("submit", function(e) {
+  e.preventDefault();
+  const dni = document.getElementById("vs-dni").value.trim();
+  const msgEl = document.getElementById("vs-msg");
+  if (!/^\d{8}$/.test(dni)) return setMsg(msgEl, "error", "El DNI debe tener 8 dígitos.");
+  const p = vetPatients[dni];
+  if (!p || !p.triajeOk) return setMsg(msgEl, "error", "Este DNI no pasó por Registro todavía. Regístralo ahí primero.");
+
+  p.sisfohOk = true;
+  p.sisfohEstado = vsisfohEstado;
+  p.sisfohAt = now();
+
+  setMsg(msgEl, "ok", `Validado: ${p.nombre} (DNI ${dni}). Ya puede pasar a Atención Veterinaria.`);
+  document.getElementById("form-vsisfoh").reset();
+  renderAllVet();
+});
+
+// ---------- ATENCIÓN VETERINARIA ----------
+function lookupVetAtencion() {
+  const dni = document.getElementById("vatn-dni").value.trim();
+  const wrap = document.getElementById("vatn-result");
+  if (!/^\d{8}$/.test(dni)) { vatnResult = null; wrap.innerHTML = `<div class="msg-box msg-error">Ingresa un DNI válido de 8 dígitos.</div>`; playDenySound(); return; }
+  const p = vetPatients[dni];
+  if (!p || !p.triajeOk || !p.sisfohOk) {
+    wrap.innerHTML = `
+      <div class="block-box">
+        <div class="block-header">
+          <div class="icow">⛔</div>
+          <div class="txt">Este dueño no puede ser atendido: falta completar Registro y/o SISFOH.</div>
+        </div>
+        <div class="status-pills">
+          <div class="status-pill ${p?.triajeOk ? "pill-ok" : "pill-bad"}">📋 REGISTRO<br>${p?.triajeOk ? "✓ LISTO" : "✕ FALTA"}</div>
+          <div class="status-pill ${p?.sisfohOk ? "pill-ok" : "pill-bad"}">🛡️ SISFOH<br>${p?.sisfohOk ? "✓ LISTO" : "✕ FALTA"}</div>
+        </div>
+      </div>`;
+    playDenySound();
+    return;
+  }
+  vatnResult = p.dni;
+  renderVetAtencionPanel();
+}
+function renderVetAtencionPanel() {
+  const wrap = document.getElementById("vatn-result");
+  if (!vatnResult) { wrap.innerHTML = ""; return; }
+  const p = vetPatients[vatnResult];
+  if (!p) { wrap.innerHTML = ""; return; }
+  wrap.innerHTML = `
+    <div class="found-box">
+      <div class="found-name">${p.nombre} <span style="color:#8A8478;font-weight:600;">· DNI ${p.dni}</span></div>
+      <div class="found-meta">${p.celular} · ${p.direccion}</div>
+      <div class="pet-badge">🐾 ${p.mnombre} · ${p.especie}${p.raza ? " · " + p.raza : ""}${p.sexo ? " · " + p.sexo : ""}${p.medad ? " · " + p.medad + " (edad)" : ""}${p.mpeso ? " · " + p.mpeso + " kg" : ""}</div>
+      ${p.obs ? `<div class="found-meta" style="margin-top:4px;">Obs: ${p.obs}</div>` : ""}
+      <div class="treat-grid">
+        ${TREATMENTS.map(t => {
+          const done = p.atenciones?.[t.key]?.done;
+          return `
+          <label class="treat-item${done ? " checked" : ""}">
+            <input type="checkbox" ${done ? "checked" : ""} onchange="toggleTratamiento('${p.dni}','${t.key}', this.checked)">
+            ${t.ico} ${t.label}${done && p.atenciones[t.key].at ? ` <span style="font-size:10px;opacity:.7;">(${p.atenciones[t.key].at})</span>` : ""}
+          </label>`;
+        }).join("")}
+      </div>
+    </div>`;
+}
+function toggleTratamiento(dni, key, checked) {
+  const p = vetPatients[dni];
+  if (!p) return;
+  p.atenciones[key] = { done: checked, at: checked ? now() : null };
+  renderVetAtencionPanel();
+  renderStatsVet();
+  showToastVet(checked ? "Tratamiento registrado ✓" : "Tratamiento desmarcado");
+}
+
+// ---------- RESUMEN (VET) ----------
+function renderResumenVet() {
+  const filtro = (document.getElementById("vfiltro")?.value || "").trim().toLowerCase();
+  const list = Object.values(vetPatients).filter(p => !filtro || p.dni.includes(filtro) || (p.nombre || "").toLowerCase().includes(filtro) || (p.mnombre || "").toLowerCase().includes(filtro));
+  const table = document.getElementById("vtabla-resumen");
+  const headCols = ["DNI Dueño", "Dueño", "Celular", "Dirección", "Mascota", "Especie", "Raza", "Sexo", "Edad", "Peso (kg)", "Obs.", "Registro", "SISFOH", ...TREATMENTS.map(t => t.label)];
+  let html = `<thead><tr>${headCols.map(h => `<th>${h}</th>`).join("")}</tr></thead><tbody>`;
+  if (list.length === 0) {
+    html += `<tr><td colspan="${headCols.length}" style="text-align:center;color:#8A8478;padding:20px;">Sin registros todavía.</td></tr>`;
+  } else {
+    list.forEach(p => {
+      html += `<tr>
+        <td>${p.dni}</td><td>${p.nombre}</td><td>${p.celular}</td><td>${p.direccion}</td>
+        <td>${p.mnombre}</td><td>${p.especie}</td><td>${p.raza || "—"}</td><td>${p.sexo || "—"}</td>
+        <td>${p.medad || "—"}</td><td>${p.mpeso || "—"}</td><td>${p.obs || "—"}</td>
+        <td>${p.triajeOk ? '<span class="ok-ico">✓</span>' : '<span class="no-ico">✕</span>'}</td>
+        <td>${p.sisfohOk ? '<span class="ok-ico">✓</span>' : '<span class="no-ico">✕</span>'}</td>
+        ${TREATMENTS.map(t => `<td>${p.atenciones?.[t.key]?.done ? '<span class="ok-ico">✓</span>' : '<span class="dash">—</span>'}</td>`).join("")}
+      </tr>`;
+    });
+  }
+  html += "</tbody>";
+  table.innerHTML = html;
+}
+function vaciarTodoVet() {
+  if (!confirm("¿Borrar todos los registros veterinarios? Esta acción no se puede deshacer.")) return;
+  vetPatients = {};
+  renderAllVet();
+  showToastVet("Se borraron todos los registros.");
+}
+function exportExcelVet() {
+  const filtro = (document.getElementById("vfiltro")?.value || "").trim().toLowerCase();
+  const list = Object.values(vetPatients).filter(p => !filtro || p.dni.includes(filtro) || (p.nombre || "").toLowerCase().includes(filtro) || (p.mnombre || "").toLowerCase().includes(filtro));
+  if (list.length === 0) { showToastVet("No hay registros para descargar.", "error"); return; }
+
+  const rows = list.map(p => {
+    const row = {
+      "DNI Dueño": p.dni, "Dueño": p.nombre, "Celular": p.celular, "Dirección": p.direccion,
+      "Mascota": p.mnombre, "Especie": p.especie, "Raza": p.raza || "", "Sexo": p.sexo || "",
+      "Edad": p.medad || "", "Peso (kg)": p.mpeso || "", "Observaciones": p.obs || "",
+      "Registro": p.triajeOk ? "Sí" : "No", "SISFOH": p.sisfohOk ? "Sí" : "No",
+    };
+    TREATMENTS.forEach(t => { row[t.label] = p.atenciones?.[t.key]?.done ? "Sí" : "No"; });
+    return row;
+  });
+
+  if (typeof XLSX === "undefined") { showToastVet("No se pudo cargar Excel. Revisa tu conexión.", "error"); return; }
+  const ws = XLSX.utils.json_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Resumen Veterinaria");
+  const fecha = new Date().toISOString().slice(0, 10);
+  XLSX.writeFile(wb, `resumen_campana_veterinaria_${fecha}.xlsx`);
+  showToastVet("Excel descargado ✓");
+}
+
+// ---------- SORTEO (VET) ----------
+let sorteoExcluidosVet = new Set();
+let sorteoRotacionActualVet = 0;
+let sorteoGirandoVet = false;
+let sorteoBulbIntervalVet = null;
+
+function getParticipantesSorteoVet() {
+  return Object.values(vetPatients).filter(p => !sorteoExcluidosVet.has(p.dni));
+}
+function initRuletaBulbsVet() {
+  const rim = document.getElementById("vruleta-rim");
+  if (!rim || rim.dataset.built) return;
+  rim.dataset.built = "1";
+  const size = rim.clientWidth || 296;
+  const cx = size / 2, cy = size / 2, radius = size / 2 - 9;
+  for (let i = 0; i < RULETA_N_BULBS; i++) {
+    const ang = (i / RULETA_N_BULBS) * Math.PI * 2;
+    const x = cx + radius * Math.cos(ang) - 3.5;
+    const y = cy + radius * Math.sin(ang) - 3.5;
+    const bulb = document.createElement("div");
+    bulb.className = "ruleta-bulb";
+    bulb.style.left = x + "px";
+    bulb.style.top = y + "px";
+    rim.appendChild(bulb);
+  }
+}
+function renderSorteoVet() {
+  const disco = document.getElementById("vruleta-disco");
+  if (!disco) return;
+  initRuletaBulbsVet();
+  const participantes = getParticipantesSorteoVet();
+  const n = participantes.length;
+  const countEl = document.getElementById("vsorteo-count");
+  const listEl = document.getElementById("vsorteo-list");
+  countEl.textContent = n === 0 ? "No hay participantes registrados." : `${n} participante${n === 1 ? "" : "s"} en la rueda`;
+
+  if (n === 0) {
+    disco.style.background = "#E4E0D3";
+    listEl.innerHTML = `<div style="text-align:center;color:#B7B09E;">Registra mascotas para poder sortear.</div>`;
+    return;
+  }
+  const slice = 360 / n;
+  const dividerWidth = Math.min(1.6, slice * 0.12);
+  const gradientParts = [];
+  participantes.forEach((p, i) => {
+    const color = SORTEO_COLORS[i % SORTEO_COLORS.length];
+    const start = i * slice;
+    const end = (i + 1) * slice;
+    gradientParts.push(`${color} ${start.toFixed(2)}deg ${(end - dividerWidth).toFixed(2)}deg`);
+    gradientParts.push(`rgba(255,255,255,0.55) ${(end - dividerWidth).toFixed(2)}deg ${end.toFixed(2)}deg`);
+  });
+  disco.style.background = `conic-gradient(${gradientParts.join(", ")})`;
+  listEl.innerHTML = participantes.map((p, i) => `<div>${i + 1}. ${p.mnombre} <span style="color:#B7B09E;">· Dueño ${p.nombre} · DNI ${p.dni}</span></div>`).join("");
+}
+function girarRuletaVet() {
+  if (sorteoGirandoVet) return;
+  const participantes = getParticipantesSorteoVet();
+  if (participantes.length === 0) { showToastVet("No hay participantes para sortear.", "error"); return; }
+
+  sorteoGirandoVet = true;
+  document.getElementById("vwinner-box-wrap").innerHTML = "";
+
+  const n = participantes.length;
+  const winnerIndex = Math.floor(Math.random() * n);
+  const slice = 360 / n;
+  const winnerMidAngle = winnerIndex * slice + slice / 2;
+  const extraSpins = 6;
+  const jitter = (Math.random() * slice * 0.6) - (slice * 0.3);
+  const targetRotation = sorteoRotacionActualVet + extraSpins * 360 + (360 - winnerMidAngle) + jitter;
+  sorteoRotacionActualVet = targetRotation;
+
+  document.getElementById("vruleta-disco").style.transform = `rotate(${targetRotation}deg)`;
+  playSpinSound();
+
+  const bulbs = document.querySelectorAll("#vruleta-rim .ruleta-bulb");
+  let flip = false;
+  clearInterval(sorteoBulbIntervalVet);
+  sorteoBulbIntervalVet = setInterval(() => {
+    flip = !flip;
+    bulbs.forEach((b, i) => b.classList.toggle("off", (i % 2 === 0) === flip));
+  }, 110);
+
+  setTimeout(() => {
+    sorteoGirandoVet = false;
+    clearInterval(sorteoBulbIntervalVet);
+    bulbs.forEach(b => b.classList.remove("off"));
+    mostrarGanadorVet(participantes[winnerIndex]);
+  }, 4300);
+}
+function mostrarGanadorVet(p) {
+  const wrap = document.getElementById("vwinner-box-wrap");
+  wrap.innerHTML = `
+    <div class="winner-box">
+      <div class="label">🎉 GANADOR DEL SORTEO</div>
+      <div class="name">${p.mnombre}</div>
+      <div class="meta">Dueño: ${p.nombre} · DNI ${p.dni}</div>
+      <div class="winner-actions">
+        <button class="btn-primary" style="background:#F2C230; color:#123B2C;" onclick="excluirGanadorVet('${p.dni}')">Quitar de la rueda</button>
+      </div>
+    </div>`;
+  playFanfareSound();
+}
+function excluirGanadorVet(dni) {
+  sorteoExcluidosVet.add(dni);
+  document.getElementById("vwinner-box-wrap").innerHTML = "";
+  renderSorteoVet();
+  showToastVet("Ganador retirado de la rueda para el próximo sorteo.");
+}
+function resetSorteoVet() {
+  sorteoExcluidosVet.clear();
+  document.getElementById("vwinner-box-wrap").innerHTML = "";
+  renderSorteoVet();
+  showToastVet("Lista de participantes restablecida.");
+}
+
+// ---------- MASTER RENDER (VET) ----------
+function renderAllVet() {
+  buildSidebarVet();
+  renderStatsVet();
+  renderResumenVet();
+  renderSorteoVet();
+}
+
+// ---------- INIT ----------
 buildSidebar();
 switchTab("inicio");
 renderAll();
+buildSidebarVet();
+switchVTab("inicio");
+renderAllVet();
+goLanding();
 </script>
 </body>
 </html>
