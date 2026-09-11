@@ -692,7 +692,7 @@
 
       <div class="card lock-note">
         <div style="font-size:18px">🔒</div>
-        <div class="txt">Ninguna carpeta de servicio (optometría, odontología, vacunas, etc.) atenderá a un paciente si su DNI no tiene <b>Triaje</b> y <b>SISFOH</b> completos. El DNI es la llave que conecta ambos pasos.</div>
+        <div class="txt">Ninguna carpeta de servicio (optometría, odontología, vacunas, etc.) atenderá a un paciente si su DNI no tiene <b>Triaje</b> completo. El DNI es la llave que da acceso. El paso por SISFOH queda registrado automáticamente al completar el Triaje.</div>
       </div>
     </div>
 
@@ -714,22 +714,6 @@
           <button class="btn-primary" type="submit">Registrar en Triaje</button>
         </form>
         <div id="t-msg"></div>
-      </div>
-    </div>
-
-    <div class="tabpanel" id="panel-sisfoh">
-      <div class="card form-card">
-        <div class="form-title disp">Estación SISFOH</div>
-        <div class="form-sub">El DNI debe existir en Triaje primero.</div>
-        <form class="form-col" id="form-sisfoh">
-          <div class="field-wrap"><span class="field-ico">🪪</span><input class="input" id="s-dni" placeholder="DNI (8 dígitos)" maxlength="8" inputmode="numeric"></div>
-          <div class="row-gap">
-            <div class="pill-opt selected" data-val="si" onclick="selectEstado('si')">Tiene SISFOH</div>
-            <div class="pill-opt" data-val="no" onclick="selectEstado('no')">No tiene SISFOH</div>
-          </div>
-          <button class="btn-primary" type="submit">Validar SISFOH</button>
-        </form>
-        <div id="s-msg"></div>
       </div>
     </div>
 
@@ -813,7 +797,7 @@
         <div class="robot-txt">
           <div class="robot-name">⚡ ASISTENTE CH · VETERINARIA</div>
           <div class="robot-title disp">Soy CH, tu asistente digital</div>
-          <div class="robot-sub">Acompaño el Registro del dueño y su mascota, la validación SISFOH y la atención veterinaria para que nadie se pierda en el camino.</div>
+          <div class="robot-sub">Acompaño el Registro del dueño y su mascota, y la atención veterinaria para que nadie se pierda en el camino.</div>
         </div>
       </div>
 
@@ -821,7 +805,7 @@
 
       <div class="card lock-note">
         <div style="font-size:18px">🔒</div>
-        <div class="txt">La <b>Atención Veterinaria</b> no se realizará a ningún dueño si su DNI no tiene <b>Registro</b> y <b>SISFOH</b> completos. El DNI del dueño es la llave que conecta ambos pasos.</div>
+        <div class="txt">La <b>Atención Veterinaria</b> no se realizará a ningún dueño si su DNI no tiene <b>Registro</b> completo. El DNI del dueño es la llave de acceso. El paso por SISFOH queda registrado automáticamente al completar el Registro.</div>
       </div>
     </div>
 
@@ -842,22 +826,6 @@
           <button class="btn-primary" type="submit">💾 Guardar</button>
         </form>
         <div id="v-msg"></div>
-      </div>
-    </div>
-
-    <div class="tabpanel" id="vpanel-sisfoh">
-      <div class="card form-card">
-        <div class="form-title disp">Estación SISFOH</div>
-        <div class="form-sub">El DNI del dueño debe existir en Registro primero.</div>
-        <form class="form-col" id="form-vsisfoh">
-          <div class="field-wrap"><span class="field-ico">🪪</span><input class="input" id="vs-dni" placeholder="DNI del dueño (8 dígitos)" maxlength="8" inputmode="numeric"></div>
-          <div class="row-gap">
-            <div class="pill-opt selected" data-vval="si" onclick="selectEstadoVet('si')">Tiene SISFOH</div>
-            <div class="pill-opt" data-vval="no" onclick="selectEstadoVet('no')">No tiene SISFOH</div>
-          </div>
-          <button class="btn-primary" type="submit">Validar SISFOH</button>
-        </form>
-        <div id="vs-msg"></div>
       </div>
     </div>
 
@@ -984,7 +952,6 @@ const SERVICES = [
 const TABS = [
   { key: "inicio", label: "Inicio", ico: "🏠" },
   { key: "triaje", label: "Triaje", ico: "📋" },
-  { key: "sisfoh", label: "SISFOH", ico: "🛡️" },
   { key: "servicios", label: "Carpetas", ico: "🗂️" },
   { key: "sorteo", label: "Sortear", ico: "🎡" },
   { key: "resumen", label: "Resumen", ico: "📊" },
@@ -1117,36 +1084,14 @@ document.getElementById("form-triaje").addEventListener("submit", function(e) {
     ...existing, dni, apellido, edad, telefono, peso, talla,
     imc: imc ? imc.valor : "", imcCategoria: imc ? imc.categoria : "",
     presion, triajeOk: true, triajeAt: now(), services: existing.services || emptyServices(),
+    sisfohOk: true, sisfohEstado: existing.sisfohEstado || "si", sisfohAt: now(),
   };
   patients[dni] = nuevo;
   if (USE_FIREBASE) colHumano.doc(dni).set(nuevo).catch(err => showToast("Error al guardar en Firebase: " + err.message, "error"));
 
-  setMsg(msgEl, "ok", `Registrado: ${apellido} (DNI ${dni}). IMC ${imc ? imc.valor + " · " + imc.categoria : "-"}. Ahora debe pasar por SISFOH.`);
+  setMsg(msgEl, "ok", `Registrado: ${apellido} (DNI ${dni}). IMC ${imc ? imc.valor + " · " + imc.categoria : "-"}. Ya puede pasar a las carpetas de servicio.`);
   document.getElementById("form-triaje").reset();
   document.getElementById("t-imc").innerHTML = "";
-  renderAll();
-});
-
-// ---------- SISFOH ----------
-function selectEstado(val) {
-  sisfohEstado = val;
-  document.querySelectorAll(".pill-opt").forEach(el => el.classList.toggle("selected", el.dataset.val === val));
-}
-document.getElementById("form-sisfoh").addEventListener("submit", function(e) {
-  e.preventDefault();
-  const dni = document.getElementById("s-dni").value.trim();
-  const msgEl = document.getElementById("s-msg");
-  if (!/^\d{8}$/.test(dni)) return setMsg(msgEl, "error", "El DNI debe tener 8 dígitos.");
-  const p = patients[dni];
-  if (!p || !p.triajeOk) return setMsg(msgEl, "error", "Este DNI no pasó por Triaje todavía. Regístralo ahí primero.");
-
-  p.sisfohOk = true;
-  p.sisfohEstado = sisfohEstado;
-  p.sisfohAt = now();
-  if (USE_FIREBASE) colHumano.doc(dni).set(p).catch(err => showToast("Error al guardar en Firebase: " + err.message, "error"));
-
-  setMsg(msgEl, "ok", `Validado: ${p.apellido} (DNI ${dni}). Ya puede pasar a las carpetas de servicio.`);
-  document.getElementById("form-sisfoh").reset();
   renderAll();
 });
 
@@ -1202,7 +1147,6 @@ function renderSvcPanel() {
         ${p ? `
         <div class="status-pills">
           <div class="status-pill ${p.triajeOk ? "pill-ok" : "pill-bad"}">🩺 TRIAJE<br>${p.triajeOk ? "✓ LISTO" : "✕ FALTA"}</div>
-          <div class="status-pill ${p.sisfohOk ? "pill-ok" : "pill-bad"}">🛡️ SISFOH<br>${p.sisfohOk ? "✓ LISTO" : "✕ FALTA"}</div>
         </div>` : ""}
       </div>`;
   } else if (svcResult?.kind === "error") {
@@ -1234,8 +1178,8 @@ function lookupService() {
   const dni = document.getElementById("svc-dni").value.trim();
   if (!/^\d{8}$/.test(dni)) { svcResult = { kind: "error", text: "Ingresa un DNI válido de 8 dígitos." }; renderSvcPanel(); playDenySound(); return; }
   const p = patients[dni];
-  if (!p || !p.triajeOk || !p.sisfohOk) {
-    svcResult = { kind: "blocked", text: "Este paciente no puede ser atendido: falta completar Triaje y/o SISFOH.", p: p || null };
+  if (!p || !p.triajeOk) {
+    svcResult = { kind: "blocked", text: "Este paciente no puede ser atendido: falta completar Triaje.", p: p || null };
     renderSvcPanel();
     playDenySound();
     return;
@@ -1682,7 +1626,6 @@ const TREATMENTS = [
 const VTABS = [
   { key: "inicio", label: "Inicio", ico: "🏠" },
   { key: "registro", label: "Registro", ico: "📋" },
-  { key: "sisfoh", label: "SISFOH", ico: "🛡️" },
   { key: "atencion", label: "Atención", ico: "🩹" },
   { key: "sorteo", label: "Sortear", ico: "🎡" },
   { key: "resumen", label: "Resumen", ico: "📊" },
@@ -1935,46 +1878,18 @@ document.getElementById("form-vregistro").addEventListener("submit", function(e)
       mnombre: m.mnombre, especie: m.especie, raza: m.raza, sexo: m.sexo, medad: m.medad, mpeso: m.mpeso, obs: m.obs,
       foto: m.foto || existing.foto || "",
       triajeOk: true, triajeAt: now(), triajeAtISO: existing.triajeAtISO || new Date().toISOString(), atenciones: existing.atenciones || emptyTreatments(),
+      sisfohOk: true, sisfohEstado: existing.sisfohEstado || "si", sisfohAt: now(),
     };
     vetPatients[key] = nuevo;
     if (USE_FIREBASE) colVet.doc(key).set(nuevo).catch(err => showToastVet("Error al guardar en Firebase: " + err.message, "error"));
   });
 
   const cant = mascotas.length;
-  setMsg(msgEl, "ok", `Guardado: ${nombre} (DNI ${dni}) · ${cant} mascota${cant > 1 ? "s" : ""} registrada${cant > 1 ? "s" : ""}. Ahora debe pasar por SISFOH.`);
+  setMsg(msgEl, "ok", `Guardado: ${nombre} (DNI ${dni}) · ${cant} mascota${cant > 1 ? "s" : ""} registrada${cant > 1 ? "s" : ""}. Ya puede pasar a Atención Veterinaria.`);
   document.getElementById("form-vregistro").reset();
   resetMascotasContainer();
   renderAllVet();
   showToastVet("Registro guardado y formulario limpio ✓");
-});
-
-// ---------- SISFOH (VET) ----------
-function selectEstadoVet(val) {
-  vsisfohEstado = val;
-  document.querySelectorAll("#form-vsisfoh .pill-opt").forEach(el => el.classList.toggle("selected", el.dataset.vval === val));
-}
-document.getElementById("form-vsisfoh").addEventListener("submit", function(e) {
-  e.preventDefault();
-  const dni = document.getElementById("vs-dni").value.trim();
-  const msgEl = document.getElementById("vs-msg");
-  if (!/^\d{8}$/.test(dni)) return setMsg(msgEl, "error", "El DNI debe tener 8 dígitos.");
-  const claves = Object.keys(vetPatients).filter(k => vetPatients[k].dni === dni && vetPatients[k].triajeOk);
-  if (claves.length === 0) return setMsg(msgEl, "error", "Este DNI no pasó por Registro todavía. Regístralo ahí primero.");
-
-  let nombreDueno = "";
-  claves.forEach(k => {
-    const p = vetPatients[k];
-    p.sisfohOk = true;
-    p.sisfohEstado = vsisfohEstado;
-    p.sisfohAt = now();
-    nombreDueno = p.nombre;
-    if (USE_FIREBASE) colVet.doc(k).set(p).catch(err => showToastVet("Error al guardar en Firebase: " + err.message, "error"));
-  });
-
-  const cant = claves.length;
-  setMsg(msgEl, "ok", `Validado: ${nombreDueno} (DNI ${dni}) · ${cant} mascota${cant > 1 ? "s" : ""}. Ya puede pasar a Atención Veterinaria.`);
-  document.getElementById("form-vsisfoh").reset();
-  renderAllVet();
 });
 
 // ---------- ATENCIÓN VETERINARIA ----------
@@ -1999,17 +1914,16 @@ function lookupVetAtencion() {
 
   if (claves.length === 1) {
     const p = vetPatients[claves[0]];
-    if (!p.triajeOk || !p.sisfohOk) {
+    if (!p.triajeOk) {
       vatnResult = null;
       wrap.innerHTML = `
         <div class="block-box">
           <div class="block-header">
             <div class="icow">⛔</div>
-            <div class="txt">Este dueño no puede ser atendido: falta completar Registro y/o SISFOH.</div>
+            <div class="txt">Este dueño no puede ser atendido: falta completar Registro.</div>
           </div>
           <div class="status-pills">
             <div class="status-pill ${p?.triajeOk ? "pill-ok" : "pill-bad"}">📋 REGISTRO<br>${p?.triajeOk ? "✓ LISTO" : "✕ FALTA"}</div>
-            <div class="status-pill ${p?.sisfohOk ? "pill-ok" : "pill-bad"}">🛡️ SISFOH<br>${p?.sisfohOk ? "✓ LISTO" : "✕ FALTA"}</div>
           </div>
         </div>`;
       playDenySound();
@@ -2021,14 +1935,14 @@ function lookupVetAtencion() {
   }
 
   // Dueño con varias mascotas registradas
-  const elegibles = claves.filter(k => vetPatients[k].triajeOk && vetPatients[k].sisfohOk);
+  const elegibles = claves.filter(k => vetPatients[k].triajeOk);
   if (elegibles.length === 0) {
     vatnResult = null;
     wrap.innerHTML = `
       <div class="block-box">
         <div class="block-header">
           <div class="icow">⛔</div>
-          <div class="txt">Ninguna mascota de este dueño puede ser atendida todavía: falta completar Registro y/o SISFOH.</div>
+          <div class="txt">Ninguna mascota de este dueño puede ser atendida todavía: falta completar Registro.</div>
         </div>
       </div>`;
     playDenySound();
