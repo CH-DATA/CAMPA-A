@@ -1665,8 +1665,8 @@ function crearBloqueMascotaHtml(n) {
       <div class="foto-field">
         <div class="foto-preview" id="v-foto-preview-${n}">🐾</div>
         <div class="foto-btn-col">
-          <label class="foto-btn" for="v-foto-input-${n}">📷 Tomar / subir foto</label>
-          <input type="file" id="v-foto-input-${n}" accept="image/*" capture="environment" style="display:none;" onchange="handleFotoVetChange(event, ${n})">
+          <label class="foto-btn" for="v-foto-input-${n}">📷 Tomar / elegir foto</label>
+          <input type="file" id="v-foto-input-${n}" accept="image/*" style="display:none;" onchange="handleFotoVetChange(event, ${n})">
           <button type="button" class="foto-remove" id="v-foto-remove-${n}" style="display:none;" onclick="clearFotoVet(${n})">Quitar foto</button>
         </div>
       </div>
