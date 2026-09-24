@@ -237,6 +237,8 @@
   }
   .foto-preview img { width: 100%; height: 100%; object-fit: cover; }
   .foto-btn-col { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .foto-btn-row { display: flex; gap: 6px; }
+  .foto-btn-row .foto-btn { flex: 1; padding: 9px 6px; }
   .foto-btn {
     border: 1.5px solid #E4DFD3; background: #FCFBF8; border-radius: 12px; padding: 9px 12px;
     font-size: 13px; font-weight: 700; color: #4A473D; cursor: pointer; font-family: 'Inter', sans-serif;
@@ -1665,7 +1667,11 @@ function crearBloqueMascotaHtml(n) {
       <div class="foto-field">
         <div class="foto-preview" id="v-foto-preview-${n}">🐾</div>
         <div class="foto-btn-col">
-          <label class="foto-btn" for="v-foto-input-${n}">📷 Tomar / elegir foto</label>
+          <div class="foto-btn-row">
+            <label class="foto-btn" for="v-foto-cam-${n}">📷 Cámara</label>
+            <label class="foto-btn" for="v-foto-input-${n}">🖼️ Galería</label>
+          </div>
+          <input type="file" id="v-foto-cam-${n}" accept="image/*" capture="environment" style="display:none;" onchange="handleFotoVetChange(event, ${n})">
           <input type="file" id="v-foto-input-${n}" accept="image/*" style="display:none;" onchange="handleFotoVetChange(event, ${n})">
           <button type="button" class="foto-remove" id="v-foto-remove-${n}" style="display:none;" onclick="clearFotoVet(${n})">Quitar foto</button>
         </div>
@@ -1828,6 +1834,7 @@ function handleFotoVetChange(e, n) {
 function clearFotoVet(n) {
   vFotosPorBloque[n] = "";
   document.getElementById("v-foto-input-" + n).value = "";
+  document.getElementById("v-foto-cam-" + n).value = "";
   document.getElementById("v-foto-preview-" + n).innerHTML = "🐾";
   document.getElementById("v-foto-remove-" + n).style.display = "none";
 }
